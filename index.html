@@ -133,10 +133,99 @@
         .animate-float {
             animation: float 3s ease-in-out infinite;
         }
+
+
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0b0f19; /* الخلفية الداكنة */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    transition: opacity 0.6s ease;
+
+      transition: 
+        opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.8s;
+}
+
+.loader-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.loader-logo {
+    width: 110px;
+    height: auto;
+    /* تأثير ظل ناري خلف اللوجو */
+    filter: drop-shadow(0 0 15px rgba(255, 69, 0, 0.5));
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.loader-text {
+    /* تدرج لوني ناري للنص */
+    background: linear-gradient(to bottom, #ff8c00, #ff4500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Black Ops One', 'Arial Black', sans-serif; /* خط سميك وقوي */
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin: 0;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    filter: drop-shadow(0 0 8px rgba(255, 69, 0, 0.3));
+}
+
+.fire-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 69, 0, 0.1);
+    border-top: 3px solid #ff4500; /* لون برتقالي محمر ناري */
+    border-radius: 50%;
+    /* إضافة توهج للسبينر */
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5), inset 0 0 5px rgba(255, 69, 0, 0.2);
+    animation: spin 0.8s linear infinite;
+}
+
+/* حركات الأنيميشن */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255, 69, 0, 0.4)); }
+    50% { transform: scale(1.08); filter: drop-shadow(0 0 20px rgba(255, 69, 0, 0.7)); }
+}
+
+/* إخفاء الشاشة */
+.loader-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+
     </style>
 </head>
 <body class="dark min-h-screen flex flex-col pb-24 md:pb-0">
 
+    <!-- شاشة التحميل -->
+<div id="loading-screen">
+    <div class="loader-content">
+        <img src="favicon.png" alt="Logo" class="loader-logo">
+        <h1 class="loader-text">MUSCLEUP</h1>
+        <div class="spinner"></div>
+    </div>
+</div>
     <!-- APP CHIC LOADING SCREEN -->
     <div id="app-loading-screen" class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center transition-all duration-700 ease-out">
         <div class="flex flex-col items-center gap-5 text-center">
@@ -1258,7 +1347,7 @@
             if (progressBar) {
                 setTimeout(() => {
                     progressBar.style.width = '100%';
-                }, 2000);
+                }, 100);
             }
 
             // Dismiss Loading Screen smoothly at 2 seconds (2000ms)
@@ -1269,7 +1358,7 @@
                     loader.classList.add('pointer-events-none');
                     setTimeout(() => loader.remove(), 700);
                 }
-            }, 20000);
+            }, 2000);
 
             loadSavedData();
             lucide.createIcons();
@@ -2322,6 +2411,24 @@
             chartInstance.data.datasets[0].data = counts;
             chartInstance.update();
         }
+
+
+
+
+        window.addEventListener("load", function() {
+    const loader = document.getElementById("loading-screen");
+    
+    // الانتظار لمدة ثانيتين قبل بدء عملية الإخفاء
+    setTimeout(function() {
+        loader.classList.add("loader-hidden");
+        
+        // حذف العنصر تماماً من الصفحة بعد انتهاء الفيد (0.5 ثانية)
+        setTimeout(() => {
+            loader.style.display = "none";
+        }, 500);
+        
+    }, 2000); // 2000 ملي ثانية = ثانيتين
+});
     </script>
 </body>
 </html>
