@@ -1,0 +1,2327 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSCLEUP - نظام الطيبات المطور والتدريب المنزلي الذكي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cairo, Almarai, Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;750;800&family=Cairo:wght@300;400;600;700;800;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <!-- أكواد أيقونة الموقع (Favicon) -->
+  <!-- أكواد أيقونة الموقع (Favicon) مع إجبار المتصفح على التحديث -->
+    <link rel="icon" href="favicon.png?v=2" type="image/png">
+    <link rel="shortcut icon" href="favicon.png?v=2" type="image/png">
+    <link rel="apple-touch-icon" href="favicon.png?v=2">
+    
+    <style>
+        :root {
+            --font-family: 'Cairo', sans-serif;
+            
+            /* Default Fire/Orange Theme Variables (الوضع الناري الافتراضي) */
+            --primary-color: #f97316;
+            --primary-glow: rgba(249, 115, 22, 0.15);
+            --primary-hover: #ea580c;
+
+            /* Dark Mode Custom CSS Variables (Default) */
+            --bg-color: #0b0f19;
+            --panel-bg: #0f172a;
+            --panel-bg-hover: #1e293b;
+            --sub-panel-bg: #161f30;
+            --border-color: #1e293b;
+            --border-sub-color: #334155;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --input-bg: #1e293b;
+        }
+
+        /* Light Mode Custom CSS Variables override */
+        body.light {
+            --bg-color: #f1f5f9;
+            --panel-bg: #ffffff;
+            --panel-bg-hover: #f8fafc;
+            --sub-panel-bg: #f8fafc;
+            --border-color: #e2e8f0;
+            --border-sub-color: #cbd5e1;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --input-bg: #ffffff;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Custom semantic helper classes for CSS Var bindings */
+        .app-bg { background-color: var(--bg-color) !important; }
+        .panel-bg { background-color: var(--panel-bg) !important; }
+        .panel-bg-hover:hover { background-color: var(--panel-bg-hover) !important; }
+        .sub-panel-bg { background-color: var(--sub-panel-bg) !important; }
+        .text-main-color { color: var(--text-main) !important; }
+        .text-muted-color { color: var(--text-muted) !important; }
+        .border-main-color { border-color: var(--border-color) !important; }
+        .border-sub-color { border-color: var(--border-sub-color) !important; }
+        
+        .input-style {
+            background-color: var(--input-bg) !important;
+            color: var(--text-main) !important;
+            border-color: var(--border-sub-color) !important;
+        }
+
+        /* Custom styled scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.05);
+        }
+        body.dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        /* Dynamic primary elements from settings */
+        .theme-primary-bg {
+            background-color: var(--primary-color) !important;
+        }
+        .theme-primary-text {
+            color: var(--primary-color) !important;
+        }
+        .theme-primary-border {
+            border-color: var(--primary-color) !important;
+        }
+        .theme-primary-glow-bg {
+            background-color: var(--primary-glow) !important;
+        }
+
+        /* Tab Active States mapped dynamically */
+        .active-tab {
+            background-color: var(--primary-glow);
+            color: var(--primary-color) !important;
+            border-right: 4px solid var(--primary-color);
+        }
+        @media (max-width: 768px) {
+            .active-tab {
+                border-right: none;
+                border-bottom: 3px solid var(--primary-color);
+                background-color: var(--primary-glow);
+            }
+        }
+        @keyframes success-pop {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-success {
+            animation: success-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="dark min-h-screen flex flex-col pb-24 md:pb-0">
+
+    <!-- APP CHIC LOADING SCREEN -->
+    <div id="app-loading-screen" class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center transition-all duration-700 ease-out">
+        <div class="flex flex-col items-center gap-5 text-center">
+            <div class="relative">
+                <div class="absolute inset-0 bg-orange-500 rounded-full blur-2xl opacity-20 animate-pulse"></div>
+                <div class="relative bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-2xl text-orange-450 animate-float">
+                    <img src="favicon.png" alt="Logo" class="w-16 h-16 object-contain">
+                </div>
+            </div>
+            <div class="mt-2">
+                <h2 class="text-2xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent tracking-wider">MUSCLEUP</h2>
+                <p class="text-[10px] text-slate-400 mt-1.5 tracking-widest uppercase">جاري تهيئة كابتن الذكاء الاصطناعي ومسموحات الطيبات...</p>
+            </div>
+            <!-- Progress Line Indicator -->
+            <div class="w-48 h-1.5 bg-slate-900 rounded-full overflow-hidden mt-1 border border-slate-850">
+                <div id="loading-progress-bar" class="h-full bg-orange-500 theme-primary-bg transition-all duration-[1800ms] ease-out" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONBOARDING MODAL OVERLAY -->
+    <div id="onboarding-overlay" class="fixed inset-0 z-50 bg-slate-950/95 flex items-center justify-center p-4 overflow-y-auto hidden">
+        <div class="bg-slate-900 border border-slate-850 rounded-3xl w-full max-w-2xl p-6 md:p-8 flex flex-col gap-6 shadow-2xl relative text-slate-100">
+            <div class="absolute top-6 left-6 text-orange-550 opacity-20">
+                <i data-lucide="sparkles" class="w-16 h-16 animate-pulse"></i>
+            </div>
+            
+            <div class="text-center">
+                <h2 class="text-2xl md:text-3xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">تخصيص نظامك البدني والغذائي</h2>
+                <p class="text-xs md:text-sm text-slate-400 mt-2">قم بملء تفاصيل جسمك لتهيئة جدول التمارين اليومية وتحليل الطيبات بالذكاء الاصطناعي</p>
+            </div>
+
+            <!-- Steps indicators -->
+            <div class="flex justify-between items-center max-w-md mx-auto w-full gap-2 mt-2">
+                <div id="step-ind-1" class="h-2 flex-1 rounded-full bg-orange-550 theme-primary-bg transition-all"></div>
+                <div id="step-ind-2" class="h-2 flex-1 rounded-full bg-slate-800 transition-all"></div>
+                <div id="step-ind-3" class="h-2 flex-1 rounded-full bg-slate-800 transition-all"></div>
+            </div>
+
+            <form id="onboarding-form" onsubmit="handleOnboardingSubmit(event)" class="flex flex-col gap-5">
+                <!-- STEP 1: Basic Information -->
+                <div id="step-panel-1" class="step-panel flex flex-col gap-4">
+                    <h3 class="text-md font-bold text-orange-400 theme-primary-text border-b border-slate-800 pb-2">الخطوة 1: البيانات الأساسية</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs text-slate-400 font-bold">الاسم الكريم</label>
+                            <input type="text" id="ob-name" placeholder="أدخل اسمك هنا" class="input-style border rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs text-slate-400 font-bold">السن (بالسنوات)</label>
+                            <input type="number" id="ob-age" min="10" max="100" placeholder="مثال: 26" class="input-style border rounded-xl p-3 text-sm text-center focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs text-slate-400 font-bold">الوزن الحالي (كجم)</label>
+                            <input type="number" id="ob-weight" min="30" max="250" placeholder="مثال: 80" class="input-style border rounded-xl p-3 text-sm text-center focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs text-slate-400 font-bold">الطول الحالي (سم)</label>
+                            <input type="number" id="ob-height" min="100" max="250" placeholder="مثال: 178" class="input-style border rounded-xl p-3 text-sm text-center focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Body Classification & Photo -->
+                <div id="step-panel-2" class="step-panel hidden flex flex-col gap-4">
+                    <h3 class="text-md font-bold text-orange-400 theme-primary-text border-b border-slate-800 pb-2">الخطوة 2: تصنيف طبيعة وحجم الجسم</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="sub-panel-bg hover:bg-slate-800 border border-slate-750 hover:border-orange-500 p-2.5 rounded-xl cursor-pointer flex items-center gap-3 transition-all text-main-color">
+                            <input type="radio" name="ob-body-type" value="نحيف جداً" class="accent-orange-500 w-4 h-4">
+                            <div class="text-right">
+                                <span class="font-bold text-xs block">نحيف جداً</span>
+                            </div>
+                        </label>
+                        <label class="sub-panel-bg hover:bg-slate-800 border border-slate-750 hover:border-orange-500 p-2.5 rounded-xl cursor-pointer flex items-center gap-3 transition-all text-main-color">
+                            <input type="radio" name="ob-body-type" value="نحيف" class="accent-orange-500 w-4 h-4">
+                            <div class="text-right">
+                                <span class="font-bold text-xs block">نحيف</span>
+                            </div>
+                        </label>
+                        <label class="sub-panel-bg hover:bg-slate-800 border border-slate-750 hover:border-orange-500 p-2.5 rounded-xl cursor-pointer flex items-center gap-3 transition-all text-main-color">
+                            <input type="radio" name="ob-body-type" value="عادي" class="accent-orange-500 w-4 h-4" checked>
+                            <div class="text-right">
+                                <span class="font-bold text-xs block">عادي / متناسق</span>
+                            </div>
+                        </label>
+                        <label class="sub-panel-bg hover:bg-slate-800 border border-slate-750 hover:border-orange-500 p-2.5 rounded-xl cursor-pointer flex items-center gap-3 transition-all text-main-color">
+                            <input type="radio" name="ob-body-type" value="تخين (ممتلئ)" class="accent-orange-500 w-4 h-4">
+                            <div class="text-right">
+                                <span class="font-bold text-xs block">تخين (ممتلئ)</span>
+                            </div>
+                        </label>
+                        <label class="sub-panel-bg hover:bg-slate-800 border border-slate-750 hover:border-orange-500 p-2.5 rounded-xl cursor-pointer flex items-center gap-3 transition-all sm:col-span-2 text-main-color">
+                            <input type="radio" name="ob-body-type" value="تخين جداً (سمنة مفرطة)" class="accent-orange-500 w-4 h-4">
+                            <div class="text-right">
+                                <span class="font-bold text-xs block">تخين جداً (سمنة مفرطة)</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Optional Body Shape Photo -->
+                    <div class="border-t border-slate-800 pt-3 mt-2 flex flex-col gap-3">
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs text-slate-300 font-bold flex items-center gap-1.5">
+                                <i data-lucide="image" class="w-4 h-4 text-orange-400 theme-primary-text"></i>
+                                صورة لشكل الجسم الحالي (اختياري)
+                            </label>
+                            <input type="file" id="ob-photo-input" accept="image/*" onchange="handleBodyPhotoUpload(event)" class="text-xs text-slate-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-orange-450 hover:file:bg-slate-750 cursor-pointer">
+                            <div id="ob-photo-preview-container" class="hidden mt-2 flex items-center gap-3 sub-panel-bg p-2 rounded-xl border border-slate-800">
+                                <img id="ob-photo-preview" class="w-16 h-16 object-cover rounded-lg border border-slate-700">
+                                <span class="text-[10px] text-muted-color">تم ضغط الصورة وحفظها بنجاح! ✔️</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Muscle Assessment, Notes & Goals -->
+                <div id="step-panel-3" class="step-panel hidden flex flex-col gap-4">
+                    <h3 class="text-md font-bold text-orange-400 theme-primary-text border-b border-slate-800 pb-2">الخطوة 3: قوة العضلات والمستوى الرياضي</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[160px] overflow-y-auto pr-1 pl-1">
+                        <div class="sub-panel-bg p-2.5 rounded-xl border border-main-color">
+                            <label class="text-xs font-bold text-slate-300 block mb-1">عضلة الصدر</label>
+                            <select id="ob-muscle-chest" class="w-full input-style border rounded-lg p-1.5 text-xs text-slate-200">
+                                <option value="ضعيف / صغير">ضعيف أو صغير جداً</option>
+                                <option value="متوسط / عادي" selected>متوسط أو عادي</option>
+                                <option value="قوي / بارز">قوي ومكتمل التكوين</option>
+                            </select>
+                        </div>
+                        <div class="sub-panel-bg p-2.5 rounded-xl border border-main-color">
+                            <label class="text-xs font-bold text-slate-300 block mb-1">عضلات البطن والوسط</label>
+                            <select id="ob-muscle-abs" class="w-full input-style border rounded-lg p-1.5 text-xs text-slate-200">
+                                <option value="مترهل / كرش">مترهل وبحاجة لشد وحرق</option>
+                                <option value="متوسط / عادي" selected>عادي غير بارز</option>
+                                <option value="قوي / مسطح">قوي ومسطح تماماً</option>
+                            </select>
+                        </div>
+                        <div class="sub-panel-bg p-2.5 rounded-xl border border-main-color">
+                            <label class="text-xs font-bold text-slate-300 block mb-1">عضلات الأرجل والفخذ</label>
+                            <select id="ob-muscle-legs" class="w-full input-style border rounded-lg p-1.5 text-xs text-slate-200">
+                                <option value="ضعيف / نحيف">نحيفة وضعيفة</option>
+                                <option value="متوسط / عادي" selected>عادية ومقبولة</option>
+                                <option value="قوي / عريض">عريضة وقوية</option>
+                            </select>
+                        </div>
+                        <div class="sub-panel-bg p-2.5 rounded-xl border border-main-color">
+                            <label class="text-xs font-bold text-slate-300 block mb-1">مستوى لياقتك</label>
+                            <select id="ob-level" class="w-full input-style border rounded-lg p-1.5 text-xs text-slate-200">
+                                <option value="مبتدئ" selected>مبتدئ (لا أتمرن حالياً)</option>
+                                <option value="متوسط">متوسط (أتحرك أو أتمرن أحياناً)</option>
+                                <option value="متقدم">متقدم (لياقة بدنية وتحمل عالي)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Custom Health & Physical Notes (Optional) -->
+                    <div class="flex flex-col gap-1 text-main-color">
+                        <label class="text-xs text-slate-300 font-bold flex items-center gap-1.5">
+                            <i data-lucide="edit-3" class="w-4 h-4 text-orange-400 theme-primary-text"></i>
+                            ملاحظات صحية أو بدنية إضافية (اختياري)
+                        </label>
+                        <textarea id="ob-health-notes" rows="2" placeholder="مثال: عندي خشونة بسيطة بالركبة، أو أريد التركيز على عضلات الصدر..." class="input-style border rounded-xl p-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-orange-500 resize-none"></textarea>
+                    </div>
+                </div>
+
+                <!-- Navigation Action Row -->
+                <div class="flex justify-between items-center border-t border-slate-800 pt-4 mt-2">
+                    <button type="button" id="ob-prev-btn" onclick="prevOnboardingStep()" class="bg-slate-850 hover:bg-slate-750 text-xs font-bold px-4 py-2.5 rounded-xl border border-slate-700 text-slate-300 flex items-center gap-1.5">
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i> السابق
+                    </button>
+                    
+                    <button type="button" id="ob-next-btn" onclick="nextOnboardingStep()" class="bg-orange-500 hover:bg-orange-600 text-slate-950 text-xs font-black px-5 py-2.5 rounded-xl flex items-center gap-1.5 mr-auto theme-primary-bg">
+                        التالي <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    </button>
+                    
+                    <button type="submit" id="ob-submit-btn" class="hidden bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-slate-950 text-xs font-black px-6 py-2.5 rounded-xl flex items-center gap-1.5 mr-auto shadow-lg shadow-orange-500/20 theme-primary-bg">
+                        توليد البرنامج بالذكاء الاصطناعي ✨ <i data-lucide="check" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN INTERFACE -->
+    <!-- TOP BAR HEADER -->
+    <header class="panel-bg border-b border-main-color sticky top-0 z-40 px-4 py-3 md:px-8 flex justify-between items-center backdrop-blur-md">
+        <div class="flex items-center gap-3">
+            <div class="bg-gradient-to-tr from-orange-500 to-amber-450 p-2 rounded-xl shadow-lg shadow-orange-500/10 theme-primary-bg" id="header-logo-container">
+             <img src="favicon.png" alt="Logo" class="w-6 h-6 object-contain">
+            </div>
+            <div>
+                <h1 class="font-extrabold text-base md:text-lg bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent theme-primary-text">MUSCLEUP</h1>
+                <p class="text-[10px] text-muted-color">الطيبات والتدريب المنزلي الذكي</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <!-- Light/Dark Mode Switcher -->
+            <button onclick="toggleLightDarkMode()" class="panel-bg hover:panel-bg-hover text-amber-550 light:text-slate-700 p-2 rounded-lg border border-main-color flex items-center justify-center transition-all duration-300" id="theme-toggle-btn" title="تغيير المظهر">
+                <i data-lucide="sun" id="theme-icon" class="w-4.5 h-4.5"></i>
+            </button>
+
+            <!-- Settings Trigger Icon -->
+            <button onclick="openSettingsModal()" class="panel-bg hover:panel-bg-hover text-muted-color light:text-slate-700 p-2 rounded-lg border border-main-color flex items-center justify-center transition-all duration-300" title="الإعدادات">
+                <i data-lucide="settings" class="w-4.5 h-4.5"></i>
+            </button>
+
+            <div class="panel-bg px-2 py-1.5 rounded-lg border border-main-color flex items-center gap-1">
+                <i data-lucide="flame" class="w-4 h-4 text-orange-500 animate-bounce"></i>
+                <span id="streak-count" class="font-bold text-orange-400 text-xs md:text-sm">0</span>
+            </div>
+            <div class="panel-bg px-2 py-1.5 rounded-lg border border-main-color flex items-center gap-1">
+                <i data-lucide="trophy" class="w-4 h-4 text-yellow-500"></i>
+                <span id="total-workouts" class="font-bold text-yellow-400 text-xs md:text-sm">0</span>
+            </div>
+            <button onclick="openProfileEdit()" class="panel-bg hover:panel-bg-hover text-muted-color light:text-slate-700 p-2 rounded-lg border border-main-color" title="تعديل القياسات">
+                <i data-lucide="user" class="w-4.5 h-4.5"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- SETTINGS PANEL POPUP / MODAL -->
+    <div id="settings-overlay" class="fixed inset-0 z-50 bg-slate-950/80 flex items-center justify-center p-4 overflow-y-auto hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-md p-6 flex flex-col gap-5 shadow-2xl text-slate-100 relative">
+            <button onclick="closeSettingsModal()" class="absolute top-4 left-4 text-slate-400 hover:text-slate-100">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
+                <i data-lucide="settings" class="w-5 h-5 text-orange-500 animate-spin theme-primary-text"></i>
+                <h3 class="font-extrabold text-base">إعدادات تطبيق MUSCLEUP</h3>
+            </div>
+
+            <!-- Custom Font Selector -->
+            <div class="flex flex-col gap-2">
+                <label class="text-xs text-slate-300 font-bold flex items-center gap-1">
+                    <i data-lucide="type" class="w-4 h-4"></i> تغيير خط التطبيق:
+                </label>
+                <select id="setting-font-select" onchange="changeAppFont(this.value)" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none">
+                    <option value="Cairo">خط القاهرة (Cairo) - الافتراضي</option>
+                    <option value="Almarai">خط المراعي (Almarai) - دائري ناعم</option>
+                    <option value="Tajawal">خط التجول (Tajawal) - حاد وأنيق</option>
+                </select>
+            </div>
+
+            <!-- Custom Color Palettes -->
+            <div class="flex flex-col gap-2">
+                <label class="text-xs text-slate-300 font-bold flex items-center gap-1">
+                    <i data-lucide="palette" class="w-4 h-4"></i> اختيار اللون الرئيسي للتطبيق:
+                </label>
+                <div class="grid grid-cols-4 gap-2.5 mt-1">
+                    <button onclick="changeAppColor('#f97316', 'rgba(249, 115, 22, 0.15)', '#ea580c')" class="h-10 rounded-xl bg-orange-500 border border-slate-700 hover:scale-105 transition-all flex items-center justify-center text-slate-950 font-black text-xs" title="برتقالي ناري">ناري</button>
+                    <button onclick="changeAppColor('#10b981', 'rgba(16, 185, 129, 0.15)', '#059669')" class="h-10 rounded-xl bg-emerald-500 border border-slate-700 hover:scale-105 transition-all flex items-center justify-center text-slate-950 font-black text-xs" title="أخضر زمردي">زمردي</button>
+                    <button onclick="changeAppColor('#3b82f6', 'rgba(59, 130, 246, 0.15)', '#2563eb')" class="h-10 rounded-xl bg-blue-500 border border-slate-700 hover:scale-105 transition-all flex items-center justify-center text-slate-950 font-black text-xs" title="أزرق رياضي">أزرق</button>
+                    <button onclick="changeAppColor('#a855f7', 'rgba(168, 85, 247, 0.15)', '#9333ea')" class="h-10 rounded-xl bg-purple-500 border border-slate-700 hover:scale-105 transition-all flex items-center justify-center text-slate-950 font-black text-xs" title="بنفسجي ملكي">بنفسجي</button>
+                </div>
+            </div>
+
+            <!-- Notification custom edit from settings -->
+            <div class="flex flex-col gap-2.5 border-t border-slate-800 pt-3">
+                <h4 class="text-xs font-bold text-slate-300 flex items-center gap-1">
+                    <i data-lucide="bell" class="w-4 h-4"></i> إعدادات التنبيه السريع:
+                </h4>
+                <div class="bg-slate-850 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                    <span class="text-[11px] text-slate-400">تفعيل جرس الإشعار الصوتي</span>
+                    <input type="checkbox" id="setting-notify-sound" checked class="w-4 h-4 accent-orange-500">
+                </div>
+            </div>
+
+            <button onclick="closeSettingsModal()" class="bg-slate-800 hover:bg-slate-750 text-slate-100 font-bold p-2.5 rounded-xl text-xs transition duration-200 mt-2">
+                حفظ وإغلاق
+            </button>
+        </div>
+    </div>
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- DESKTOP SIDEBAR NAVIGATION -->
+        <aside class="hidden md:flex flex-col w-64 panel-bg border-l border-main-color p-4 gap-2">
+            <nav class="flex flex-col gap-1.5" id="desktop-nav-container">
+                <button onclick="switchTab('dashboard')" class="tab-btn active-tab flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-450" id="tab-dashboard-btn">
+                    <i data-lucide="layout-dashboard" class="w-4.5 h-4.5"></i>
+                    <span>لوحة التحكم</span>
+                </button>
+                <button onclick="switchTab('workout-plan')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-450" id="tab-workout-plan-btn">
+                    <i data-lucide="calendar" class="w-4.5 h-4.5"></i>
+                    <span>البرنامج الأسبوعي</span>
+                </button>
+                <button onclick="switchTab('diet-tayyebat')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-450" id="tab-diet-tayyebat-btn">
+                    <i data-lucide="apple" class="w-4.5 h-4.5 text-amber-550"></i>
+                    <span>نظام الطيبات المطور</span>
+                </button>
+                <button onclick="switchTab('active-workout')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-450" id="tab-active-workout-btn">
+                    <i data-lucide="timer" class="w-4.5 h-4.5"></i>
+                    <span>المساعد التفاعلي</span>
+                </button>
+                <button onclick="switchTab('history')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-450" id="tab-history-btn">
+                    <i data-lucide="history" class="w-4.5 h-4.5"></i>
+                    <span>سجل التمارين</span>
+                </button>
+                <button onclick="switchTab('ai-coaching')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-450" id="tab-ai-coaching-btn">
+                    <i data-lucide="bot" class="w-4.5 h-4.5 text-orange-450 theme-primary-text"></i>
+                    <span>المدرب الشخصي (AI)</span>
+                </button>
+                <!-- Help Tab Button Desktop -->
+                <button onclick="switchTab('help')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-450" id="tab-help-btn">
+                    <i data-lucide="help-circle" class="w-4.5 h-4.5 text-blue-400"></i>
+                    <span>صفحة المساعدة</span>
+                </button>
+            </nav>
+
+            <div class="mt-auto bg-slate-950/40 p-4 rounded-xl border border-main-color text-center">
+                <span class="text-orange-450 text-xs font-bold block mb-1 theme-primary-text">الذكاء الاصطناعي متصل 🟢</span>
+                <p class="text-[10px] text-slate-500">موصول بنموذج Gemini 2.5 بشكل فوري ومستقر!</p>
+            </div>
+        </aside>
+
+        <!-- MAIN INTERACTIVE DISPLAY -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-8">
+
+            <!-- TAB 1: DASHBOARD -->
+            <section id="tab-dashboard" class="tab-content flex flex-col gap-6">
+                <!-- Welcome Banner -->
+                <div class="bg-gradient-to-l from-orange-950/20 via-slate-900 to-slate-900 border border-main-color p-6 rounded-2xl relative overflow-hidden" id="dash-banner">
+                    <div class="absolute -left-10 -bottom-10 opacity-5 text-orange-500 scale-150">
+                        <i data-lucide="dumbbell" class="w-48 h-48"></i>
+                    </div>
+                    <div class="max-w-xl">
+                        <span id="welcome-badge" class="bg-orange-500/10 text-orange-400 text-xs font-bold px-3 py-1 rounded-full border border-orange-500/20 theme-primary-glow-bg theme-primary-text">مرحباً بك يا بطل! 👋</span>
+                        <h2 class="text-xl md:text-2xl font-black mt-3 text-main-color">برنامج اليوم وغذاء الطيبات المطور بانتظارك!</h2>
+                        <p class="text-xs md:text-sm text-muted-color mt-2 leading-relaxed">قواعد نظام الطيبات المطور هنا تدعم استخدام (دقيق الحبة الكاملة) لراحتك البدنية والصحية التامة.</p>
+                    </div>
+                </div>
+
+                <!-- TODAY'S EXERCISE WORKOUT DISPLAY -->
+                <div class="panel-bg border border-main-color p-5 rounded-2xl flex flex-col gap-4 relative" id="dash-today-panel">
+                    <div class="absolute top-5 left-5 text-orange-500 bg-orange-500/10 px-3 py-1.5 rounded-xl border border-orange-500/20 flex items-center gap-1.5 text-xs font-bold theme-primary-glow-bg theme-primary-text theme-primary-border" id="dash-today-badge">
+                        <i data-lucide="unlock" class="w-4 h-4"></i>
+                        <span>تمرين اليوم المفتوح حالياً</span>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-sm text-muted-color flex items-center gap-2">
+                            <i data-lucide="flame" class="w-5 h-5 text-orange-500"></i>
+                            تمرين اليوم النشط: <span id="dash-today-name" class="text-main-color font-black">جاري التحميل...</span>
+                        </h3>
+                        <p id="dash-today-desc" class="text-xs text-muted-color mt-1">تتغير هذه الواجهة تلقائياً بمجرد انتهاء اليوم ودخول يوم جديد بتمارينه الخاصة.</p>
+                    </div>
+
+                    <!-- Exercises preview list for today -->
+                    <div id="dash-today-preview-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                        <!-- Populated dynamically via Javascript based on today's real day -->
+                    </div>
+
+                    <div class="flex justify-end mt-2">
+                        <button id="dash-start-workout-btn" onclick="" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-slate-950 font-black px-6 py-3 rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-orange-500/10 transition-all theme-primary-bg">
+                            ابدأ تمرين اليوم التفاعلي الآن 🚀
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FAST PROFILE & AI STATUS BRIEF -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Profile Summary Card with optional Photo preview -->
+                    <div class="panel-bg border border-main-color p-4 rounded-2xl flex flex-col justify-between gap-3 relative" id="dash-profile-card">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-muted-color font-bold">ملفك البدني الحالي</span>
+                            <button onclick="openProfileEdit()" class="text-[10px] theme-primary-text font-bold hover:underline">تعديل</button>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div id="dash-profile-photo-container" class="hidden">
+                                <img id="dash-profile-photo" class="w-12 h-12 rounded-full object-cover border-2 theme-primary-border">
+                            </div>
+                            <div class="flex flex-col gap-1.5 flex-1">
+                                <h4 id="user-profile-title" class="font-bold text-main-color text-sm">بطل رشاقتي</h4>
+                                <div class="flex flex-wrap gap-1 text-[9px] text-muted-color">
+                                    <span class="sub-panel-bg px-1.5 py-0.5 rounded border border-main-color" id="prof-spec-age">السن: -</span>
+                                    <span class="sub-panel-bg px-1.5 py-0.5 rounded border border-main-color" id="prof-spec-weight">الوزن: -</span>
+                                    <span class="sub-panel-bg px-1.5 py-0.5 rounded border border-main-color" id="prof-spec-body">الجسم: -</span>
+                                    <span class="sub-panel-bg px-1.5 py-0.5 rounded border border-main-color" id="prof-spec-level">المستوى: -</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="dash-health-notes-wrapper" class="hidden text-[10px] text-muted-color sub-panel-bg p-2 rounded-xl border border-sub-color mt-1 max-h-[50px] overflow-y-auto">
+                            <strong>ملاحظاتك:</strong> <span id="dash-health-notes">لا يوجد</span>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Health Analysis Brief -->
+                    <div class="panel-bg border border-main-color p-4 rounded-2xl md:col-span-2 flex flex-col gap-2 relative" id="dash-ai-brief-card">
+                        <div class="flex items-center gap-1.5 text-xs font-bold theme-primary-text" id="dash-ai-icon-title">
+                            <i data-lucide="brain-circuit" class="w-4 h-4 animate-pulse"></i>
+                            <span>التحليل الذكي ونقاط الضعف المقترحة:</span>
+                        </div>
+                        <p id="ai-brief-text" class="text-xs text-main-color leading-relaxed min-h-[50px] flex items-center">
+                            جاري فحص عضلاتك وتوليد التحليل الفوري عبر الذكاء الاصطناعي ومفتاحك الخاص...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- DAILY NOTIFICATION SETTINGS PANEL -->
+                <div class="panel-bg border border-main-color p-5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4" id="dash-notification-card">
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 bg-blue-500/10 rounded-xl text-blue-400">
+                            <i data-lucide="bell-ring" class="w-6 h-6 animate-swing"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-sm text-main-color">منظّم التنبيهات الرياضي اليومي</h3>
+                            <p class="text-[10px] text-muted-color mt-0.5">قم بتفعيل الإشعارات وتحديد الوقت المناسب لتمرينك المفضل اليومي.</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3 sub-panel-bg p-3 rounded-xl border border-main-color">
+                        <div class="flex items-center gap-1.5">
+                            <input type="checkbox" id="reminder-toggle" onchange="toggleNotifications(event)" class="w-4 h-4 accent-orange-500 theme-primary-bg cursor-pointer">
+                            <label for="reminder-toggle" class="text-xs text-main-color font-bold cursor-pointer">تفعيل التذكير</label>
+                        </div>
+                        <div class="h-6 w-[1px] bg-slate-700 dark:bg-slate-700 light:bg-slate-300 hidden sm:block"></div>
+                        <div class="flex items-center gap-1.5">
+                            <label class="text-[10px] text-muted-color font-bold">تحديد الوقت:</label>
+                            <input type="time" id="reminder-time-input" onchange="updateReminderTime()" class="input-style border text-xs p-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fast Stats Row -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="panel-bg border border-main-color p-4 rounded-2xl flex items-center gap-4">
+                        <div class="p-3 bg-orange-500/10 rounded-xl theme-primary-text" id="dash-stat-act-icon">
+                            <i data-lucide="activity" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-muted-color">معدل التمارين</p>
+                            <p id="stat-weekly-count" class="text-lg font-bold text-main-color">0 <span class="text-[10px] font-normal text-muted-color">أسبوعياً</span></p>
+                        </div>
+                    </div>
+                    <div class="panel-bg border border-main-color p-4 rounded-2xl flex items-center gap-4">
+                        <div class="p-3 bg-orange-500/10 rounded-xl text-orange-400">
+                            <i data-lucide="zap" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-muted-color">السعرات المقدرة</p>
+                            <p id="stat-calories" class="text-lg font-bold text-main-color">0 <span class="text-[10px] font-normal text-muted-color">سعرة</span></p>
+                        </div>
+                    </div>
+                    <div class="panel-bg border border-main-color p-4 rounded-2xl flex items-center gap-4">
+                        <div class="p-3 bg-blue-500/10 rounded-xl text-blue-400">
+                            <i data-lucide="clock" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-muted-color">الوقت المستغرق</p>
+                            <p id="stat-duration" class="text-lg font-bold text-main-color">0 <span class="text-[10px] font-normal text-muted-color">دقيقة</span></p>
+                        </div>
+                    </div>
+                    <div class="panel-bg border border-main-color p-4 rounded-2xl flex items-center gap-4">
+                        <div class="p-3 bg-pink-500/10 rounded-xl text-pink-400">
+                            <i data-lucide="calendar" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-muted-color">آخر تمرين مكمل</p>
+                            <p id="stat-last-workout" class="text-xs font-bold text-main-color truncate max-w-[130px]">لا يوجد بيانات</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weekly Activity Graph -->
+                <div class="panel-bg border border-main-color p-5 rounded-2xl flex flex-col gap-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-sm text-main-color flex items-center gap-2">
+                            <i data-lucide="bar-chart-2" class="w-5 h-5 theme-primary-text" id="dash-chart-icon"></i>
+                            التزامك الأسبوعي بالتمارين المنزلية
+                        </h3>
+                        <span class="text-xs text-muted-color">آخر 7 أيام</span>
+                    </div>
+                    <div class="h-64 relative">
+                        <canvas id="workout-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: WEEKLY COMPREHENSIVE WORKOUT PLAN (7 DAYS) -->
+            <section id="tab-workout-plan" class="tab-content hidden flex flex-col gap-6">
+                <div>
+                    <h2 class="text-xl md:text-2xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent theme-primary-text">البرنامج الرياضي المنزلي الشامل (7 أيام)</h2>
+                    <p class="text-xs md:text-sm text-muted-color mt-1">تظهر التمارين فقط لليوم الحالي لحمايتك من استباق الأيام، ويتم فتح باقي الأيام تباعاً.</p>
+                </div>
+
+                <!-- 7 Days Grid -->
+                <div id="weekly-days-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Populated via Javascript dynamically with locking logic -->
+                </div>
+            </section>
+
+            <!-- TAB 3: DIET TAYYEBAT -->
+            <section id="tab-diet-tayyebat" class="tab-content hidden flex flex-col gap-6">
+                <div>
+                    <h2 class="text-xl md:text-2xl font-black text-amber-500" id="diet-page-title">نظام الطيبات المطور للدكتور ضياء العوضي (نسخة مخصصة)</h2>
+                    <p class="text-xs md:text-sm text-muted-color mt-1">النظام الغذائي المتكامل الذي يمنع الألبان والبقوليات ويركز على الأغذية الآمنة، مع تعديل خاص يسمح بـ (دقيق الحبة الكاملة).</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- مسموحات الطيبات -->
+                    <div class="bg-emerald-950/20 border border-emerald-500/20 p-5 rounded-2xl flex flex-col gap-3" id="diet-allowed-card">
+                        <div class="flex items-center gap-2 text-emerald-400 font-bold border-b border-emerald-500/20 pb-2" id="diet-allowed-title">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            <span>المسموحات المعتمدة</span>
+                        </div>
+                        <ul class="text-xs text-slate-300 dark:text-slate-300 light:text-slate-800 flex flex-col gap-2 list-none">
+                            <li>🌾 <strong>خبز دقيق الحبة الكاملة:</strong> بشرط تحميصه جيداً قبل الأكل (تعديلك الخاص المعتمد!).</li>
+                            <li>🍚 <strong>الأرز الأبيض والبسمتي:</strong> مطبوخ جيداً وبأي سمن طبيعي أو زيت زيتون.</li>
+                            <li>🥔 <strong>البطاطس والبطاطا:</strong> مسلوقة أو مطبوخة أو محمرة (ممنوع بقشرها).</li>
+                            <li>🥩 <strong>اللحوم والطيور والأسماك:</strong> لحم بقري، ضأن، دجاج، بط, حمام، وأسماك بكل أنواعها.</li>
+                            <li>🧈 <strong>الدهون الطبيعية:</strong> سمن بلدي، زبدة طبيعية، زيت زيتون (يمنع الزيوت النباتية المهدرجة).</li>
+                            <li>🍉 <strong>الفواكه المقشرة:</strong> تفاح مقشر، كومثرى مقشرة، موز، بطيخ، رمان، بلح.</li>
+                            <li>🧂 <strong>التوابل والملح:</strong> الملح العادي والبهارات والسكر مسموحون تماماً.</li>
+                        </ul>
+                    </div>
+
+                    <!-- ممنوعات الطيبات -->
+                    <div class="bg-rose-950/20 border border-rose-500/20 p-5 rounded-2xl flex flex-col gap-3">
+                        <div class="flex items-center gap-2 text-rose-400 font-bold border-b border-rose-500/20 pb-2">
+                            <i data-lucide="x-circle" class="w-5 h-5"></i>
+                            <span>الممنوعات والتحذيرات</span>
+                        </div>
+                        <ul class="text-xs text-slate-300 dark:text-slate-300 light:text-slate-800 flex flex-col gap-2 list-none">
+                            <li>🍅 <strong>الدقيق الأبيض المكرر:</strong> يفضل تجنبه تماماً والاعتماد على الحبة الكاملة.</li>
+                            <li>🥛 <strong>الحليب ومنتجات الألبان:</strong> ممنوع تماماً الجبن والقشطة واللبن الحليب.</li>
+                            <li>🫘 <strong>البقوليات بالكامل:</strong> ممنوع الفول، العدس، الحمص، اللوبيا، الفاصوليا، والترمس.</li>
+                            <li>🍅 <strong>الخضار النيء غير المطبوخ:</strong> يمنع تناول القشور والصلصة الجاهزة والطماطم غير المقشرة.</li>
+                            <li>☕ <strong>المنبهات الثقيلة:</strong> الشاي الثقيل والقهوة السريعة ممنوعة (يسمح بشاي خفيف جداً).</li>
+                            <li>🧴 <strong>الزيوت الصناعية:</strong> زيوت بذرة القطن والذرة والصويا والزيوت النباتية المهدرجة.</li>
+                        </ul>
+                    </div>
+
+                    <!-- وجبات اليوم والمدير التفاعلي للوجبات -->
+                    <div class="panel-bg border border-main-color p-5 rounded-2xl flex flex-col gap-4" id="diet-logger-card">
+                        <h3 class="font-bold text-sm text-main-color flex items-center gap-2">
+                            <i data-lucide="utensils" class="w-5 h-5 text-amber-450"></i>
+                            سجل وجبتك اليوم للتحقق
+                        </h3>
+                        <form id="diet-log-form" onsubmit="handleDietLog(event)" class="flex flex-col gap-3">
+                            <div class="flex flex-col gap-1">
+                                <label class="text-[10px] text-muted-color font-bold">نوع الوجبة</label>
+                                <select id="diet-meal-type" class="input-style border rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-orange-550">
+                                    <option value="فطور">فطور الطيبات 🍳</option>
+                                    <option value="غداء">غداء الطيبات 🥩</option>
+                                    <option value="عشاء">عشاء الطيبات 🍞</option>
+                                    <option value="سناك">وجبة خفيفة / سناك 🍉</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label class="text-[10px] text-muted-color font-bold">ماذا أكلت اليوم؟ (اكتب الوجبة بالتفصيل)</label>
+                                <textarea id="diet-meal-desc" required rows="3" placeholder="مثال: توست حبة كاملة محمص مع سمنة بلدي ومربى، ورز وبطاطس مطبوخة ولحمة مسلوقة..." class="input-style border rounded-lg p-2.5 text-xs placeholder:text-slate-450 focus:outline-none focus:ring-1 focus:ring-orange-500 resize-none"></textarea>
+                            </div>
+                            <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all">
+                                <i data-lucide="plus" class="w-4 h-4"></i> فحص وتسجيل الوجبة
+                            </button>
+                        </form>
+
+                        <!-- Diet Log Display List -->
+                        <div class="border-t border-main-color pt-3">
+                            <h4 class="text-[11px] font-bold text-muted-color mb-2">وجبات اليوم المسجلة:</h4>
+                            <div id="diet-log-list" class="flex flex-col gap-2 max-h-[160px] overflow-y-auto">
+                                <!-- Populated dynamically -->
+                                <p class="text-[10px] text-slate-500 text-center py-2">لم تسجل أي وجبات اليوم بعد.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: ACTIVE WORKOUT COMPANION (مساعد التمرين التفاعلي النشط) -->
+            <section id="tab-active-workout" class="tab-content hidden flex flex-col gap-6">
+                <div class="max-w-3xl mx-auto w-full">
+                    <!-- Setup Screen -->
+                    <div id="companion-setup" class="panel-bg border border-main-color p-8 rounded-3xl text-center flex flex-col items-center justify-center gap-4">
+                        <div class="p-4 bg-slate-850 dark:bg-slate-850 light:bg-slate-200 rounded-full text-orange-400 animate-pulse" id="companion-setup-icon">
+                            <i data-lucide="dumbbell" class="w-12 h-12 theme-primary-text"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-main-color">لم تقم بتحديد تمرين للبدء به</h2>
+                        <p class="text-xs text-muted-color max-w-md leading-relaxed">اذهب إلى تبويب **البرنامج الأسبوعي** واقترأ تمارين اليوم المفتوح حالياً ثم اضغط على زر "ابدأ التمارين الآن 🚀" لتشغيل المساعد الذكي التفاعلي.</p>
+                        <button onclick="switchTab('workout-plan')" class="bg-orange-500 hover:bg-orange-600 text-slate-950 font-extrabold px-6 py-3 rounded-xl text-xs flex items-center gap-2 mt-2 shadow-lg shadow-orange-500/10 theme-primary-bg" id="companion-setup-btn">
+                            اذهب للبرنامج الأسبوعي <i data-lucide="calendar" class="w-4.5 h-4.5"></i>
+                        </button>
+                    </div>
+
+                    <!-- Active Workout Companion Interface -->
+                    <div id="companion-active-panel" class="hidden flex flex-col gap-6">
+                        <div class="panel-bg border border-main-color p-4 rounded-2xl flex items-center justify-between">
+                            <div>
+                                <span id="companion-day-badge" class="bg-orange-500/10 text-orange-400 text-[10px] font-bold px-2.5 py-1 rounded-full border border-orange-500/20 theme-primary-glow-bg theme-primary-text theme-primary-border">اليوم الأول</span>
+                                <h3 id="companion-day-title" class="text-md font-bold text-main-color mt-1.5">تمارين الصدر والترايسبس العريض</h3>
+                            </div>
+                            <button onclick="quitActiveWorkout()" class="bg-rose-500/10 hover:bg-rose-500 hover:text-white border border-rose-500/20 text-rose-400 text-xs font-bold px-3 py-1.5 rounded-lg transition-all">
+                                إنهاء التمرين الخروج ❌
+                            </button>
+                        </div>
+
+                        <!-- Main Exercise Card -->
+                        <div class="panel-bg border border-main-color p-6 md:p-8 rounded-3xl flex flex-col gap-6 relative overflow-hidden shadow-2xl">
+                            <!-- Background watermark with progress -->
+                            <div class="absolute -left-10 -bottom-10 opacity-5 text-orange-450 scale-[2]">
+                                <i data-lucide="activity" class="w-48 h-48"></i>
+                            </div>
+
+                            <div class="flex justify-between items-center border-b border-main-color pb-4">
+                                <div>
+                                    <span id="companion-exec-number" class="text-[11px] text-muted-color font-bold">تمرين 1 من 4</span>
+                                    <h4 id="companion-exec-name" class="text-lg font-black text-main-color mt-1">الضغط العادي</h4>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[10px] text-muted-color font-bold">المجموعات الموصى بها</p>
+                                    <p id="companion-exec-sets-info" class="text-sm font-extrabold text-orange-400 mt-1 theme-primary-text" id="companion-sets-indicator">3 جولات × 12 عدة</p>
+                                </div>
+                            </div>
+
+                            <!-- "Baladi" Explanation Box -->
+                            <div class="sub-panel-bg border border-main-color p-4 rounded-2xl flex flex-col gap-2">
+                                <span class="text-[10px] text-orange-450 theme-primary-text font-bold flex items-center gap-1" id="companion-speech-title">
+                                    <i data-lucide="speech" class="w-3.5 h-3.5"></i> الشرح بالبلدي (اعمل إيه بالظبط؟):
+                                </span>
+                                <p id="companion-exec-explanation" class="text-xs md:text-sm text-main-color leading-relaxed font-semibold">
+                                    انزل على إيدك ورجلك مفرودة، واهبط بصدرك لحد قرب الأرض واطلع تاني. ده بيشغل الصدر والكتف والتراي.
+                                </p>
+                            </div>
+
+                            <!-- LIVE TRACKING STATE PANEL -->
+                            <div id="live-state-wrapper" class="bg-slate-950/40 border border-main-color p-6 rounded-2xl flex flex-col items-center justify-center text-center gap-4">
+                                <div id="state-normal-exercise" class="flex flex-col items-center gap-2">
+                                    <span class="text-[11px] text-muted-color font-bold tracking-wider uppercase">الجولة الحالية</span>
+                                    <div class="flex items-baseline gap-2">
+                                        <span id="current-set-count" class="text-5xl font-black theme-primary-text">1</span>
+                                        <span class="text-slate-500 text-sm">من</span>
+                                        <span id="total-set-count" class="text-lg font-bold text-muted-color">3</span>
+                                    </div>
+                                    <p id="current-rep-target-desc" class="text-xs text-muted-color mt-1">الهدف: العب <strong class="text-main-color">12 عدة</strong> ثم خذ استراحة</p>
+
+                                    <button onclick="completeCurrentSet()" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-slate-950 font-black px-8 py-3.5 rounded-2xl text-xs flex items-center gap-2 shadow-lg shadow-orange-500/20 mt-4 transition-all scale-100 hover:scale-[1.03] theme-primary-bg" id="companion-complete-btn">
+                                        أكملت هذه المجموعة بنجاح! ✔️
+                                    </button>
+                                </div>
+
+                                <!-- REST TIMER MODE -->
+                                <div id="state-rest-timer" class="hidden flex flex-col items-center gap-3">
+                                    <span class="text-[11px] text-orange-400 font-bold tracking-wider uppercase flex items-center gap-1 animate-pulse">
+                                        <i data-lucide="hourglass" class="w-4 h-4"></i> وقت الراحة الاستشفائية
+                                    </span>
+                                    <div class="relative w-36 h-36 flex items-center justify-center rounded-full bg-slate-900 border-2 border-orange-500/40">
+                                        <div class="text-center">
+                                            <span id="rest-countdown" class="text-4xl font-black tabular-nums text-slate-50">30</span>
+                                            <span class="block text-[10px] text-slate-400 mt-1">ثانية متبقية</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-slate-400 leading-relaxed max-w-sm mt-1">خذ نفساً عميقاً، واشرب رشفة مياه سريعة. يرجى الاستعداد للجولة التالية.</p>
+                                    <button onclick="skipRest()" class="text-[10px] text-slate-500 hover:text-slate-300 underline mt-2">تخطي الاستراحة والبدء فوراً ⏩</button>
+                                </div>
+                            </div>
+
+                            <!-- Workout Progress Bar -->
+                            <div class="flex flex-col gap-1.5 mt-2">
+                                <div class="flex justify-between text-[10px] text-slate-500 font-bold">
+                                    <span>تقدم تمرين اليوم</span>
+                                    <span id="workout-progress-pct">25%</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                                    <div id="workout-progress-bar" class="h-full bg-orange-500 theme-primary-bg transition-all duration-300" style="width: 25%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUCCESS GLORIOUS CONGRATS MODAL -->
+                    <div id="companion-success-screen" class="hidden panel-bg border border-main-color p-8 rounded-3xl text-center flex flex-col items-center justify-center gap-5 animate-success shadow-2xl">
+                        <div class="p-5 bg-orange-500/20 text-orange-400 rounded-full scale-110 relative" id="success-award-container">
+                            <i data-lucide="award" class="w-14 h-14 animate-bounce text-orange-450 theme-primary-text"></i>
+                            <div class="absolute inset-0 rounded-full border-2 border-orange-500 animate-ping opacity-30"></div>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">وحش يا بطل! تم إنهاء التمرين بالكامل 🎉</h2>
+                            <p class="text-xs md:text-sm text-main-color max-w-md leading-relaxed mt-2">
+                                لقد أتممت جميع جولات تمرين اليوم بانتظام تام وذكاء بدني فائق. تم تسجيل البيانات وزيادة أيام التزامك بنجاح!
+                            </p>
+                        </div>
+
+                        <!-- Workout Highlights card -->
+                        <div class="grid grid-cols-3 gap-3 w-full max-w-md bg-slate-950/40 p-4 rounded-2xl border border-main-color text-center text-xs mt-2">
+                            <div class="bg-slate-950 p-2.5 rounded-xl">
+                                <span class="text-[9px] text-muted-color block">السعرات المحروقة</span>
+                                <span id="success-stat-cals" class="font-extrabold text-orange-400 text-sm block mt-1">150 سعرة</span>
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl">
+                                <span class="text-[9px] text-muted-color block">المدة المقدرة</span>
+                                <span id="success-stat-time" class="font-extrabold text-blue-400 text-sm block mt-1">20 دقيقة</span>
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl">
+                                <span class="text-[9px] text-muted-color block">سلسلة الالتزام (Streak)</span>
+                                <span id="success-stat-streak" class="font-extrabold text-orange-400 text-sm block mt-1 theme-primary-text" id="success-streak-indicator">+1 يوم</span>
+                            </div>
+                        </div>
+
+                        <button onclick="dismissSuccessAndHome()" class="bg-orange-500 hover:bg-orange-600 text-slate-950 font-extrabold px-6 py-3 rounded-xl text-xs flex items-center gap-1.5 transition-all shadow-lg shadow-orange-500/25 theme-primary-bg" id="success-home-btn">
+                            الرجوع إلى لوحة التحكم <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: HISTORIES & COMPLETED LISTS -->
+            <section id="tab-history" class="tab-content hidden flex flex-col gap-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent theme-primary-text">سجل تمارينك المكتملة</h2>
+                        <p class="text-xs md:text-sm text-muted-color">سجل تاريخي يعرض تفاصيل كافة التمارين السابقة التي قمت بإتمامها</p>
+                    </div>
+                    <button onclick="clearHistory()" class="bg-rose-500/10 hover:bg-rose-500 hover:text-white border border-rose-500/30 text-rose-400 text-[10px] md:text-xs font-semibold px-3 py-1.5 rounded-lg transition-all flex items-center gap-1">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> مسح السجل
+                    </button>
+                </div>
+
+                <!-- History Table Panel -->
+                <div class="panel-bg border border-main-color rounded-2xl overflow-hidden" id="history-container">
+                    <div class="p-4 sub-panel-bg border-b border-main-color flex justify-between items-center">
+                        <span class="font-bold text-xs text-main-color">التمارين المحفوظة بالـ LocalStorage</span>
+                    </div>
+
+                    <!-- Desktop table view -->
+                    <div class="hidden md:block overflow-x-auto">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="sub-panel-bg text-muted-color text-[11px] border-b border-main-color">
+                                    <th class="p-4 font-semibold">تاريخ التسجيل</th>
+                                    <th class="p-4 font-semibold">اسم التمرين المكتمل</th>
+                                    <th class="p-4 font-semibold">إجمالي الجولات والعدات</th>
+                                    <th class="p-4 font-semibold">المدة (دقائق)</th>
+                                    <th class="p-4 font-semibold">السعرات المقدرة</th>
+                                    <th class="p-4 font-semibold text-center">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-table-body" class="divide-y border-main-color text-xs">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Mobile card view -->
+                    <div id="history-cards-container" class="md:hidden flex flex-col divide-y border-main-color">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <div id="history-empty" class="hidden p-10 text-center flex flex-col items-center justify-center gap-3">
+                        <div class="p-3 bg-slate-800 rounded-full text-slate-500">
+                            <i data-lucide="folder-open" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-xs text-main-color">لا يوجد تمارين مسجلة حالياً</p>
+                            <p class="text-[10px] text-muted-color mt-1">ابدأ بأول تمرين من البرنامج لتجد سجلك مليئاً بالإنجازات!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: AI PERSONAL COACH & CONSULTATION -->
+            <section id="tab-ai-coaching" class="tab-content hidden flex flex-col gap-6">
+                <div>
+                    <h2 class="text-xl md:text-2xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent theme-primary-text">المدرب الشخصي الذكي ومستشار الطيبات المطور</h2>
+                    <p class="text-xs md:text-sm text-muted-color mt-1">تواصل مباشرة مع مدربك الشخصي لمناقشة نظام الطيبات المعدل بحبة كاملة، التغذية، والتمارين</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Right: AI Chat Bot -->
+                    <div class="panel-bg border border-main-color rounded-2xl p-4 flex flex-col h-[500px] lg:col-span-2 shadow-xl" id="ai-chat-card">
+                        <div class="flex items-center gap-2 pb-3 border-b border-main-color">
+                            <div class="bg-orange-500/15 p-2 rounded-xl text-orange-400" id="ai-coach-icon">
+                                <i data-lucide="bot" class="w-5 h-5 animate-bounce theme-primary-text"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-xs text-main-color">الدردشة التفاعلية الفورية</h3>
+                                <p class="text-[9px] text-muted-color">موصول تلقائياً بالـ API الخاص بك - يعلم بمقاساتك وصورة جسمك ونظام الطيبات المطور</p>
+                            </div>
+                        </div>
+
+                        <!-- Chat Messages Screen -->
+                        <div id="chat-messages-box" class="flex-1 overflow-y-auto py-3 flex flex-col gap-3 pr-1 pl-1">
+                            <div class="sub-panel-bg border border-main-color p-3 rounded-2xl rounded-tr-none text-xs text-main-color leading-relaxed max-w-[85%]">
+                                أهلاً بك يا بطل! أنا مدربك الرياضي والغذائي الخاص بمحرك Gemini 2.5 الذكي. قمت بفحص بياناتك البدنية وصورة جسمك المرفقة، وسأفصل لك كل ما تحتاجه وفقاً لنظام الطيبات المطور الذي يدعم دقيق الحبة الكاملة. اسألني عن أي وجبة للتأكد من مسموحاتها!
+                            </div>
+                        </div>
+
+                        <!-- Chat input form -->
+                        <form onsubmit="handleSendChatMessage(event)" class="flex gap-2 pt-3 border-t border-main-color">
+                            <input type="text" id="chat-input-field" placeholder="اسأل الكابتن بالعامية: التوست الحبة الكاملة محمص مسموح بالطيبات؟" class="flex-1 input-style border rounded-xl px-4 py-3 text-xs focus:outline-none focus:ring-1 focus:ring-orange-500">
+                            <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-slate-950 p-3 rounded-xl transition-all theme-primary-bg" id="ai-send-btn">
+                                <i data-lucide="send" class="w-4.5 h-4.5"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Left: Diet/Workout dynamic recommendation board -->
+                    <div class="panel-bg border border-main-color rounded-2xl p-5 flex flex-col gap-4 max-h-[500px] overflow-y-auto" id="ai-recs-panel">
+                        <h3 class="font-bold text-xs text-main-color border-b border-main-color pb-2 flex items-center gap-1.5" id="ai-recs-title">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
+                            توصيات الكابتن ونقاط التميز:
+                        </h3>
+                        <div id="ai-full-analysis-box" class="text-xs text-main-color leading-relaxed flex flex-col gap-3">
+                            <p class="text-slate-500 animate-pulse">جاري تفصيل وتحليل حالتك عبر الذكاء الاصطناعي...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 7: HELP & INSTRUCTIONS PAGE -->
+            <section id="tab-help" class="tab-content hidden flex flex-col gap-6">
+                <div>
+                    <h2 class="text-xl md:text-2xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent theme-primary-text">صفحة مساعدة MUSCLEUP والتعليمات</h2>
+                    <p class="text-xs md:text-sm text-muted-color mt-1">كل ما تحتاج لمعرفته حول تشغيل البرنامج، فلسفة الطيبات المطورة، ومشاكل الاستخدام.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Column 1: Tayebat FAQ -->
+                    <div class="panel-bg border border-main-color p-5 rounded-2xl flex flex-col gap-3">
+                        <h3 class="text-sm font-bold theme-primary-text flex items-center gap-1.5 border-b border-main-color pb-2">
+                            <i data-lucide="apple" class="w-4.5 h-4.5"></i> نظام الطيبات المطور لـ MUSCLEUP
+                        </h3>
+                        <div class="flex flex-col gap-3 text-xs leading-relaxed text-main-color">
+                            <div>
+                                <h4 class="font-bold text-main-color">1. ما الفلسفة من دقيق الحبة الكاملة؟</h4>
+                                <p class="mt-1 text-muted-color">في هذه النسخة المطورة والمخصصة من نظام الطيبات بناءً على رغبتك، استبدلنا الدقيق الأبيض التقليدي بـ **دقيق الحبة الكاملة** المحمص جيداً، لتوفير كربوهيدرات معقدة والياف تدعم بناء العضلات وتحافظ على راحة القولون ومنع حدوث التهابات.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-main-color">2. لماذا تمنع الألبان والبقوليات؟</h4>
+                                <p class="mt-1 text-muted-color">وفقاً لـ د. ضياء العوضي، تسبب الألبان والبقوليات التهابات صامتة في جدار الأمعاء وتؤدي للانتفاخ وتمنع الامتصاص الكامل للبروتينات والعناصر الغذائية، وهو ما يضر استشفاءك العضلي.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: App usage & Workout faq -->
+                    <div class="panel-bg border border-main-color p-5 rounded-2xl flex flex-col gap-3">
+                        <h3 class="text-sm font-bold theme-primary-text flex items-center gap-1.5 border-b border-main-color pb-2">
+                            <i data-lucide="dumbbell" class="w-4.5 h-4.5"></i> التحكم بالتمارين والمساعد التفاعلي
+                        </h3>
+                        <div class="flex flex-col gap-3 text-xs leading-relaxed text-main-color">
+                            <div>
+                                <h4 class="font-bold text-main-color">1. لماذا تبدو تمارين الأيام القادمة مقفلة؟</h4>
+                                <p class="mt-1 text-muted-color">يقوم نظام MUSCLEUP بحساب يوم الأسبوع الحالي تلقائياً وعرض تمارينه فقط لك، بينما يقوم بتشفير وقفل الأيام القادمة لحمايتك من استباق التمارين أو إرهاق عضلاتك قبل أوانها.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-main-color">2. كيف يعمل المساعد التفاعلي?</h4>
+                                <p class="mt-1 text-muted-color">بمجرد اختيار بدء التمرين، ستظهر لك إرشادات مخصصة بالبلدي، كلما أكملت مجموعة (Set) اضغط على تأكيد ليبدأ عداد الراحة تلقائياً مع تنبيه صوتي رقمي فور نهايته للبدء بالمجموعة التالية.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MOBILE NAVIGATION BOTTOM TAB BAR -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 panel-bg border-t border-main-color py-2 px-3 flex justify-around items-center z-40 shadow-2xl" id="mobile-tab-bar">
+        <button onclick="switchTab('dashboard')" class="mobile-tab-btn active-tab flex flex-col items-center gap-1 text-muted-color flex-1 py-1" id="mob-dashboard-btn">
+            <i data-lucide="layout-dashboard" class="w-4.5 h-4.5"></i>
+            <span class="text-[9px] font-bold">الرئيسية</span>
+        </button>
+        <button onclick="switchTab('workout-plan')" class="mobile-tab-btn flex flex-col items-center gap-1 text-muted-color flex-1 py-1" id="mob-workout-plan-btn">
+            <i data-lucide="calendar" class="w-4.5 h-4.5"></i>
+            <span class="text-[9px] font-bold">التمارين</span>
+        </button>
+        <button onclick="switchTab('diet-tayyebat')" class="mobile-tab-btn flex flex-col items-center gap-1 text-muted-color flex-1 py-1" id="mob-diet-tayyebat-btn">
+            <i data-lucide="apple" class="w-4.5 h-4.5 text-amber-550"></i>
+            <span class="text-[9px] font-bold">الطيبات</span>
+        </button>
+        <button onclick="switchTab('active-workout')" class="mobile-tab-btn flex flex-col items-center gap-1 text-muted-color flex-1 py-1" id="mob-active-workout-btn">
+            <i data-lucide="timer" class="w-4.5 h-4.5"></i>
+            <span class="text-[9px] font-bold">المساعد</span>
+        </button>
+        <button onclick="switchTab('ai-coaching')" class="mobile-tab-btn flex flex-col items-center gap-1 text-muted-color flex-1 py-1" id="mob-ai-coaching-btn">
+            <i data-lucide="bot" class="text-orange-450 theme-primary-text"></i>
+            <span class="text-[9px] font-bold">المدرب</span>
+        </button>
+        <!-- Mobile Help Tab -->
+        <button onclick="switchTab('help')" class="mobile-tab-btn flex flex-col items-center gap-1 text-muted-color flex-1 py-1" id="mob-help-btn">
+            <i data-lucide="help-circle" class="w-4.5 h-4.5 text-blue-400"></i>
+            <span class="text-[9px] font-bold">مساعدة</span>
+        </button>
+    </nav>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-notification" class="fixed top-5 left-1/2 -translate-x-1/2 bg-slate-850 border border-orange-500/40 text-slate-100 px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 translate-y-[-150%] opacity-0 z-50 pointer-events-none">
+        <div class="p-1 bg-orange-500/10 rounded-full text-orange-400" id="toast-icon-wrapper">
+            <i data-lucide="check" class="w-4.5 h-4.5"></i>
+        </div>
+        <div>
+            <p id="toast-title" class="font-bold text-xs text-slate-200">عمل رائع!</p>
+            <p id="toast-msg" class="text-[10px] text-slate-400 mt-0.5">تم حفظ بياناتك بنجاح.</p>
+        </div>
+    </div>
+
+    <!-- CORE SCRIPTS & CONTROLLERS -->
+    <script>
+        // Mandated API Key rule for environment execution - Empty by default
+        const apiKey = "";
+
+        // Web Audio API generator for high performance workout alarms and ticks
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playAlertSound(frequency = 600, duration = 0.1) {
+            const soundEnabled = document.getElementById('setting-notify-sound') ? document.getElementById('setting-notify-sound').checked : true;
+            if (!soundEnabled) return;
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.warn("Audio Context alert blocked or not loaded", e);
+            }
+        }
+    </script>
+
+    <script>
+        // DOM Helpers with strict null guards
+        function safeSetText(id, text) {
+            const el = document.getElementById(id);
+            if (el) el.innerText = text;
+        }
+        function safeSetHTML(id, html) {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = html;
+        }
+        function safeToggleClass(id, className, forceState) {
+            const el = document.getElementById(id);
+            if (el) {
+                if (forceState !== undefined) {
+                    if (forceState) el.classList.remove('hidden');
+                    else el.classList.add('hidden');
+                } else {
+                    el.classList.toggle('hidden');
+                }
+            }
+        }
+
+        // Global State variables
+        let workouts = [];
+        let streak = 0;
+        let chartInstance = null;
+        let currentOnboardingStep = 1;
+        let dietLogs = [];
+        let reminderInterval = null;
+
+        // Profile State (with optional photo, custom health notes, theme, font, color, etc.)
+        let profile = {
+            name: "بطل رشاقتي",
+            age: 26,
+            weight: 80,
+            height: 178,
+            bodyType: "عادي",
+            bodyPhoto: "", 
+            healthNotes: "", 
+            muscles: {
+                chest: "متوسط / عادي",
+                abs: "متوسط / عادي",
+                legs: "متوسط / عادي"
+            },
+            level: "مبتدئ",
+            goal: "بناء وتضخيم العضلات",
+            reminderEnabled: false,
+            reminderTime: "18:00",
+            theme: "dark", // dark or light
+            appFont: "Cairo", // Cairo, Almarai, Tajawal
+            primaryColor: "#f97316", // Default updated to Fire/Orange theme color
+            primaryGlow: "rgba(249, 115, 22, 0.15)", // Default updated
+            primaryHover: "#ea580c" // Default updated
+        };
+
+        // Complete 7 Days Workout Database with detailed "Baladi" explanations
+        const weeklyWorkoutsDB = {
+            1: {
+                dayName: "الأحد (الصدر والترايسبس)",
+                title: "تمارين الصدر العريض والذراعين",
+                duration: 20,
+                calories: 150,
+                exercises: [
+                    { name: "الضغط العادي (Standard Pushups)", reps: "12 عدة", sets: 3, explanation: "انزل على إيدك ورجلك مفرودة، واهبط بصدرك لحد ما تقرب من الأرض واطلع تاني. ده الأساس عشان تشغل عضلات الصدر والكتف والتراي مع بعض." },
+                    { name: "الضغط الواسع (Wide Pushups)", reps: "10 عدات", sets: 3, explanation: "افتح إيدك أوسع من مستوى كتفك بمسافة كويسة وانزل بالراحة. الحركة دي بتركز أكتر على الأطراف الخارجية لصدرك عشان تديله شكل عريض وجميل." },
+                    { name: "ضغط الماسة (Diamond Pushups)", reps: "8 عدات", sets: 3, explanation: "قرب إيدك من بعض خالص على شكل مثلث أو جوهرة تحت صدرك وانزل. الحركة دي صعبة بس بتموت الترايسبس (خلفية الدراع) وبتجيب منتصف الصدر." },
+                    { name: "غطس التراي على الكرسي (Bench Dips)", reps: "12 عدة", sets: 3, explanation: "هات أي كرسي ثابت، حط إيدك عليه وظهرك ليه، ونزل جسمك للأرض واطلع بضغط دراعك بس. تمرين جبار لتكبير وتدوير الذراعين." }
+                ]
+            },
+            2: {
+                dayName: "الإثنين (الأرجل والظهر السفلي)",
+                title: "تمارين الجزء السفلي والتحمل",
+                duration: 25,
+                calories: 180,
+                exercises: [
+                    { name: "القرفصاء العميق (Deep Squats)", reps: "15 عدة", sets: 3, explanation: "افرد رجلك بعرض كتافك، وانزل كأنك هتقعد على كرسي واطلع تاني مع فرد ضهرك وعضلات بطنك مشدودة. ده تمرين الأرجل الأساسي الأقوى." },
+                    { name: "الطعنات المتناوبة (Lunges)", reps: "12 عدة لكل رجل", sets: 3, explanation: "اخد خطوة واسعة لقدام برجل واحدة وانزل بركبتك التانية قرب الأرض واطلع تاني وبدل. التمرين ده بيشد الفخذ الأمامي والخلفي وبيشغل التوازن." },
+                    { name: "جسر الأرداف (Glute Bridges)", reps: "15 عدة", sets: 3, explanation: "نام على ضهرك واتني ركبك والعب برفع وسطك وحوضك لفوق واضغط جامد على عضلات الخلفية والظهر السفلي وثواني وانزل براحة." }
+                ]
+            },
+            3: {
+                dayName: "الثلاثاء (القلب والكارديو حرق دهون)",
+                title: "تمارين الكارديو واللياقة الهوائية",
+                duration: 15,
+                calories: 200,
+                exercises: [
+                    { name: "تسلق الجبال النشط (Mountain Climbers)", reps: "30 ثانية", sets: 3, explanation: "بوضعية الضغط العادية، اسحب ركبك لصدرك بالتبادل وبسرعة كأنك بتجري على جبل. تمرين رهيب لحرق دهون الكرش ورفع ضربات القلب." },
+                    { name: "القفز المفتوح (Jumping Jacks)", reps: "45 ثانية", sets: 3, explanation: "افتح واقفل رجلك مع رفع إيدك فوق راسك وانت بتنط خفيف في مكانك. بيحرك كل عضلات الجسم وبيحرق السعرات بامتياز." },
+                    { name: "البيربي الجبار (Burpees)", reps: "8 عدات", sets: 3, explanation: "انزل لوضع الضغط، بعدين ارفع رجلك ونط لفوق وافرد كفوفك للسقف. تمرين متعب بس هيخلي جسمك مكنة حرق دهون طول اليوم." }
+                ]
+            },
+            4: {
+                dayName: "الأربعاء (عضلات البطن والكور)",
+                title: "تمارين الكرش وشد الوسط",
+                duration: 15,
+                calories: 120,
+                exercises: [
+                    { name: "طحن البطن التقليدي (Crunches)", reps: "15 عدة", sets: 3, explanation: "نام على ضهرك واتني ركبك، وارفع كتافك بس عن الأرض ثواني وركز في عصر عضلات بطنك العلوية. بلاش تشد رقبتك بإيدك عشان ما تتعبش." },
+                    { name: "رفع الأرجل السفلي (Leg Raises)", reps: "12 عدة", sets: 3, explanation: "نام على ضهرك وححط إيدك تحت مؤخرتك عشان تحمي ضهرك، وارفع رجلك مفرودة لفوق ونزلها ببطء شديد من غير ما تلمس الأرض واطلع تاني." },
+                    { name: "البلانك الثابت (Plank)", reps: "45 ثانية", sets: 3, explanation: "ارتكز على كوعك ومشط رجلك، خلي جسمك مسطرة واحدة ولا ترفع وسطك ولا تنزله، واثبت واشد بطنك. بيعمل كور حديد وقوي جداً." }
+                ]
+            },
+            5: {
+                dayName: "الخميس (الأكتاف والظهر العلوي)",
+                title: "تمارين الأكتاف العريضة والظهر",
+                duration: 20,
+                calories: 140,
+                exercises: [
+                    { name: "ضغط البايك (Pike Push-ups)", reps: "10 عدات", sets: 3, explanation: "ارفع مؤخرتك لفوق واعمل بجسمك شكل 8 أو مثلث، وانزل براسك كأنك بتنطح الأرض واطلع. ممتاز لتقوية عضلات الأكتاف الأمامية." },
+                    { name: "تمرين سوبرمان الظهر (Superman)", reps: "12 عدة", sets: 3, explanation: "نام على بطنك، وافرد إيدك ورجلك وارفعهم في نفس الوقت لفوق مع بعض واثبت ثانيتين وانزل بالراحة. بيبني عضلات ضهر قوية ومشدودة." },
+                    { name: "دوران الأذرع الثابت (Arm Circles)", reps: "40 ثانية", sets: 3, explanation: "افرد دراعك الاتنين للجنب تماماً واعمل بيهم دوائر صغيرة ومستمرة للأمام وللخلف. مفيد لتنشيف وحرق دهون الأكتاف والرقبة." }
+                ]
+            },
+            6: {
+                dayName: "الجمعة (قوة الجسم الشاملة HIIT)",
+                title: "تمارين عالية الشدة حركية",
+                duration: 25,
+                calories: 220,
+                exercises: [
+                    { name: "السكوات مع القفز (Jump Squats)", reps: "10 عدات", sets: 3, explanation: "انزل لوضع السكوات العادي، ولما تيجي تطلع اضرب رجلك في الأرض ونط بقوة لفوق وانزل ناعم. بيحرق جامد وبيديك طاقة انفجارية." },
+                    { name: "الضغط مع لمس الكتف (Push-up to Shoulder Tap)", reps: "10 عدات", sets: 3, explanation: "اعمل عدة ضغط عادية، ولما تطلع فوق المس كتفك اليمين بإيدك الشمال والعكس مع تثبيت جسمك. بيزود قوة التوازن والتحكم." },
+                    { name: "الركبة العالية (High Knees)", reps: "30 ثانية", sets: 3, explanation: "اجري في مكانك بسرعة واقوى ما عندك مع رفع ركبك لمستوى الوسط. تمرين حرق متواصل هيصفي الدهون بالكامل." }
+                ]
+            },
+            7: {
+                dayName: "السبت (الاستشفاء والإطالات ويوجا الطيبات)",
+                title: "تمارين المرونة وفك الشد العضلي",
+                duration: 20,
+                calories: 60,
+                exercises: [
+                    { name: "وضعية الطفل المريحة (Child's Pose)", reps: "60 ثانية", sets: 1, explanation: "اقعد على كعب رجلك، وافرد دراعك وجسمك لقدام على الأرض ونزل راسك لأسفل واثبت وخد نفس عميق. مريح للأعصاب وعضلات الظهر." },
+                    { name: "تمدد الكوبرا (Cobra Stretch)", reps: "45 ثانية", sets: 1, explanation: "نام على بطنك وححط إيدك تحت كتفك واضغط وافرد دراعك وارفع صدرك وبص للسقف. ممتاز لشد وفرد عضلات البطن وفقرات الظهر." },
+                    { name: "تمدد الفخذ الخلفي (Hamstring Stretch)", reps: "60 ثانية", sets: 1, explanation: "اقعد وافرد رجلك قدامك مفرودة تماماً، وحاول تمسك صوابع رجلك بإيدك واثبت. ده بيريح الفخذ الخلفي والشد اللي في الركب." }
+                ]
+            }
+        };
+
+        // Get day key (1 for Sunday, 2 Monday, 3 Tuesday, 4 Wednesday, 5 Thursday, 6 Friday, 7 Saturday)
+        function getTodayDayKey() {
+            const systemDay = new Date().getDay(); // 0 is Sunday, 1 Monday... 6 Saturday
+            return systemDay === 0 ? 1 : systemDay + 1;
+        }
+
+        // --- THEME & APPEARANCE CONTROLLERS ---
+        function toggleLightDarkMode() {
+            const isDark = document.body.classList.contains('dark');
+            if (isDark) {
+                document.body.classList.remove('dark');
+                document.body.classList.add('light');
+                profile.theme = "light";
+                safeSetHTML('theme-icon', '<i data-lucide="moon" class="w-4.5 h-4.5"></i>');
+                document.getElementById('theme-toggle-btn').className = "panel-bg hover:panel-bg-hover text-slate-700 p-2 rounded-lg border border-main-color flex items-center justify-center transition-all duration-300";
+            } else {
+                document.body.classList.remove('light');
+                document.body.classList.add('dark');
+                profile.theme = "dark";
+                safeSetHTML('theme-icon', '<i data-lucide="sun" class="w-4.5 h-4.5"></i>');
+                document.getElementById('theme-toggle-btn').className = "panel-bg hover:panel-bg-hover text-amber-400 p-2 rounded-lg border border-main-color flex items-center justify-center transition-all duration-300";
+            }
+            saveData();
+            lucide.createIcons();
+            initChart();
+        }
+
+        function changeAppFont(fontName) {
+            profile.appFont = fontName;
+            document.documentElement.style.setProperty('--font-family', `'${fontName}', sans-serif`);
+            saveData();
+        }
+
+        function changeAppColor(primary, glow, hover) {
+            profile.primaryColor = primary;
+            profile.primaryGlow = glow;
+            profile.primaryHover = hover;
+
+            document.documentElement.style.setProperty('--primary-color', primary);
+            document.documentElement.style.setProperty('--primary-glow', glow);
+            document.documentElement.style.setProperty('--primary-hover', hover);
+
+            saveData();
+            updateUI();
+            initChart();
+            showNotification("تم تغيير اللون", "تم تطبيق السمة اللونية المحددة بنجاح.");
+        }
+
+        function openSettingsModal() {
+            safeToggleClass('settings-overlay', 'hidden', true);
+            const select = document.getElementById('setting-font-select');
+            if (select) select.value = profile.appFont || "Cairo";
+        }
+
+        function closeSettingsModal() {
+            safeToggleClass('settings-overlay', 'hidden', false);
+        }
+
+        // On Load initialization
+        window.onload = function() {
+            // Animate chic loading screen
+            const progressBar = document.getElementById('loading-progress-bar');
+            if (progressBar) {
+                setTimeout(() => {
+                    progressBar.style.width = '100%';
+                }, 2000);
+            }
+
+            // Dismiss Loading Screen smoothly at 2 seconds (2000ms)
+            setTimeout(() => {
+                const loader = document.getElementById('app-loading-screen');
+                if (loader) {
+                    loader.classList.add('opacity-0');
+                    loader.classList.add('pointer-events-none');
+                    setTimeout(() => loader.remove(), 700);
+                }
+            }, 20000);
+
+            loadSavedData();
+            lucide.createIcons();
+
+            // Validate Onboarding screen
+            const savedProfile = localStorage.getItem('fithome_profile_v2');
+            const savedDiet = localStorage.getItem('fithome_diet_logs');
+            if (savedDiet) dietLogs = JSON.parse(savedDiet);
+
+            if (!savedProfile) {
+                document.getElementById('onboarding-overlay').classList.remove('hidden');
+                updateOnboardingUI();
+            } else {
+                try {
+                    const parsed = JSON.parse(savedProfile);
+                    // Defensive merge of profile options to prevent TypeError on legacy storage
+                    profile = { ...profile, ...parsed };
+                    if (!profile.muscles) {
+                        profile.muscles = { chest: "متوسط / عادي", abs: "متوسط / عادي", legs: "متوسط / عادي" };
+                    } else {
+                        profile.muscles.chest = profile.muscles.chest || "متوسط / عادي";
+                        profile.muscles.abs = profile.muscles.abs || "متوسط / عادي";
+                        profile.muscles.legs = profile.muscles.legs || "متوسط / عادي";
+                    }
+                } catch(e) {
+                    console.error("Error loading profile", e);
+                }
+                
+                // Load Custom Styling Profiles
+                if (profile.theme) {
+                    document.body.className = profile.theme + " min-h-screen flex flex-col pb-24 md:pb-0";
+                    if (profile.theme === "light") {
+                        safeSetHTML('theme-icon', '<i data-lucide="moon" class="w-4.5 h-4.5"></i>');
+                        document.getElementById('theme-toggle-btn').className = "panel-bg hover:panel-bg-hover text-slate-700 p-2 rounded-lg border border-main-color flex items-center justify-center transition-all duration-300";
+                    }
+                }
+                if (profile.appFont) {
+                    document.documentElement.style.setProperty('--font-family', `'${profile.appFont}', sans-serif`);
+                }
+                if (profile.primaryColor) {
+                    document.documentElement.style.setProperty('--primary-color', profile.primaryColor);
+                    document.documentElement.style.setProperty('--primary-glow', profile.primaryGlow);
+                    document.documentElement.style.setProperty('--primary-hover', profile.primaryHover);
+                }
+
+                executeAIAnalysis();
+            }
+
+            renderWeeklyPlan();
+            updateUI();
+            initChart();
+            renderDietLogs();
+            initNotificationPoller();
+        };
+
+        // --- BODY SHAPE IMAGE COMPRESSION TO BASE64 ---
+        function handleBodyPhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const max_size = 250;
+
+                    if (width > height) {
+                        if (width > max_size) {
+                            height *= max_size / width;
+                            width = max_size;
+                        }
+                    } else {
+                        if (height > max_size) {
+                            width *= max_size / height;
+                            height = max_size;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+                    profile.bodyPhoto = compressedBase64;
+
+                    const obPreview = document.getElementById('ob-photo-preview');
+                    if (obPreview) obPreview.src = compressedBase64;
+                    document.getElementById('ob-photo-preview-container').classList.remove('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // --- DATA PERSISTENCE & STORAGE ---
+        function loadSavedData() {
+            const savedWorkouts = localStorage.getItem('fithome_workouts');
+            const savedStreak = localStorage.getItem('fithome_streak');
+            const lastLogDate = localStorage.getItem('fithome_last_log_date');
+
+            if (savedWorkouts) workouts = JSON.parse(savedWorkouts);
+            streak = savedStreak ? parseInt(savedStreak) : 0;
+
+            if (lastLogDate) {
+                const today = new Date().toDateString();
+                const yesterday = new Date(Date.now() - 86400000).toDateString();
+                const lastLogStr = new Date(lastLogDate).toDateString();
+
+                if (lastLogStr !== today && lastLogStr !== yesterday) {
+                    streak = 0;
+                    localStorage.setItem('fithome_streak', 0);
+                }
+            }
+        }
+        function saveData() {
+            localStorage.setItem('fithome_profile_v2', JSON.stringify(profile));
+            localStorage.setItem('fithome_workouts', JSON.stringify(workouts));
+            localStorage.setItem('fithome_streak', streak.toString());
+            localStorage.setItem('fithome_diet_logs', JSON.stringify(dietLogs));
+        }
+
+        // --- ONBOARDING MULTI-STEP ---
+        function updateOnboardingUI() {
+            document.querySelectorAll('.step-panel').forEach(panel => panel.classList.add('hidden'));
+            document.getElementById(`step-panel-${currentOnboardingStep}`).classList.remove('hidden');
+
+            for (let i = 1; i <= 3; i++) {
+                const ind = document.getElementById(`step-ind-${i}`);
+                if (ind) {
+                    if (i <= currentOnboardingStep) ind.className = "h-2 flex-1 rounded-full bg-emerald-500 transition-all theme-primary-bg";
+                    else ind.className = "h-2 flex-1 rounded-full bg-slate-800 transition-all";
+                }
+            }
+
+            const prevBtn = document.getElementById('ob-prev-btn');
+            const nextBtn = document.getElementById('ob-next-btn');
+            const submitBtn = document.getElementById('ob-submit-btn');
+
+            if (currentOnboardingStep === 1) prevBtn.classList.add('hidden');
+            else prevBtn.classList.remove('hidden');
+
+            if (currentOnboardingStep === 3) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        function nextOnboardingStep() {
+            if (currentOnboardingStep === 1) {
+                const name = document.getElementById('ob-name').value.trim();
+                const age = document.getElementById('ob-age').value;
+                const weight = document.getElementById('ob-weight').value;
+                const height = document.getElementById('ob-height').value;
+                if (!name || !age || !weight || !height) {
+                    showNotification("بيانات ناقصة", "برجاء كتابة القياسات الأساسية للمتابعة.", false);
+                    return;
+                }
+            }
+            if (currentOnboardingStep < 3) {
+                currentOnboardingStep++;
+                updateOnboardingUI();
+            }
+        }
+
+        function prevOnboardingStep() {
+            if (currentOnboardingStep > 1) {
+                currentOnboardingStep--;
+                updateOnboardingUI();
+            }
+        }
+
+        function handleOnboardingSubmit(event) {
+            event.preventDefault();
+
+            // Programmatical Validation to bypass browser hidden validation aborts
+            const name = document.getElementById('ob-name').value.trim();
+            const age = document.getElementById('ob-age').value;
+            const weight = document.getElementById('ob-weight').value;
+            const height = document.getElementById('ob-height').value;
+
+            if (!name || !age || !weight || !height) {
+                currentOnboardingStep = 1;
+                updateOnboardingUI();
+                showNotification("بيانات ناقصة", "برجاء استكمال كافة البيانات الأساسية بالخطوة الأولى.", false);
+                return;
+            }
+
+            profile.name = name;
+            profile.age = parseInt(age);
+            profile.weight = parseInt(weight);
+            profile.height = parseInt(height);
+            
+            const selectedBody = document.querySelector('input[name="ob-body-type"]:checked');
+            profile.bodyType = selectedBody ? selectedBody.value : "عادي";
+
+            if (!profile.muscles) {
+                profile.muscles = {};
+            }
+            profile.muscles.chest = document.getElementById('ob-muscle-chest').value;
+            profile.muscles.abs = document.getElementById('ob-muscle-abs').value;
+            profile.muscles.legs = document.getElementById('ob-muscle-legs').value;
+            profile.level = document.getElementById('ob-level').value;
+            profile.healthNotes = document.getElementById('ob-health-notes').value.trim();
+
+            saveData();
+            document.getElementById('onboarding-overlay').classList.add('hidden');
+
+            showNotification("أهلاً بك يا بطل!", "تم حفظ بياناتك بنجاح! جاري تخصيص وتحليل خطتك الصحية... ✨");
+            updateUI();
+            executeAIAnalysis();
+        }
+
+        // --- GEMINI API CALL AND EXECUTION ---
+        async function fetchAIResponse(promptText, systemPrompt) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: promptText }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (text) return text;
+                    }
+                } catch (error) {
+                    // Fail silently, retry
+                }
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2;
+            }
+            throw new Error("Could not connect to Gemini API.");
+        }
+
+        async function executeAIAnalysis() {
+            const systemPrompt = "أنت كابتن رياضي شخصي ومستشار لنظام الطيبات المطور للدكتور ضياء العوضي. تقوم بتحليل بيانات المتدرب وصورة جسمه وملاحظاته، وتقدم نصائح مخصصة بالعامية المصرية بأسلوب مشجع ومنظم جداً.";
+            const userPrompt = `
+                أهلاً يا كابتن، هذه بياناتي البدنية المحدثة:
+                - الاسم: ${profile.name}
+                - السن: ${profile.age} سنة
+                - الوزن: ${profile.weight} كجم
+                - الطول: ${profile.height} سم
+                - شكل وحجم جسمي الحالي: ${profile.bodyType}
+                - مستوى لياقتي: ${profile.level}
+                - حالة العضلات (الصدر: ${profile.muscles ? profile.muscles.chest : "متوسط"}، الوسط والبطن: ${profile.muscles ? profile.muscles.abs : "متوسط"}، الأرجل: ${profile.muscles ? profile.muscles.legs : "متوسط"})
+                - ملاحظاتي الصحية والبدنية الإضافية: ${profile.healthNotes || "لا يوجد"}
+
+                يرجى تقديم تحليل سريع جداً ومحفز في نقاط بسيطة يحتوي على:
+                1. نقاط الضعف التي يجب أن أركز عليها بالتمارين المنزلية الـ 7.
+                2. نصيحة غذائية مخصصة لوزني وهدفي متوافقة تماماً مع نظام الطيبات المطور (الذي يمنع الألبان والبقوليات، ويركز على مأكولات الطيبات، مع تذكر أنني استبدلت الدقيق الأبيض بدقيق الحبة الكاملة محمصاً!).
+                اجعل الأسلوب بالعامية المصرية الودية الحماسية!
+            `;
+
+            try {
+                safeSetText('ai-brief-text', "جاري تواصل الكابتن مع محرك الذكاء الاصطناعي لتفصيل خطتك البدنية والغذائية الفورية...");
+                safeSetHTML('ai-full-analysis-box', "<p class='text-slate-500 animate-pulse'>الكابتن يكتب لك الآن الخطة المخصصة...</p>");
+
+                const response = await fetchAIResponse(userPrompt, systemPrompt);
+
+                safeSetText('ai-brief-text', `أهلاً يا ${profile.name}! تم صياغة الخطة والتحليل بنجاح بالتعاون مع المدرب الذكي. ادخل على تبويب المدرب لقراءتها كاملاً! 💪`);
+
+                let formatted = response
+                    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-orange-450 font-bold theme-primary-text">$1</strong>')
+                    .replace(/\* /g, '<li class="mr-3 list-disc text-slate-300 dark:text-slate-300 light:text-slate-850">')
+                    .replace(/\n/g, '<br>');
+
+                safeSetHTML('ai-full-analysis-box', `
+                    <div class="sub-panel-bg p-4 rounded-xl border border-main-color flex flex-col gap-2">
+                        <p class="text-xs leading-relaxed text-main-color">${formatted}</p>
+                    </div>
+                `);
+
+            } catch (err) {
+                const fallbackMsg = `
+                    <strong class="text-orange-400 block mb-1">الخطة البدنية والغذائية المقترحة:</strong>
+                    يا بطل بما أنك بمستوى (${profile.level}) ووزن (${profile.weight} كجم)، نوصيك بالتالي:
+                    - التزم بنظام الطيبات المطور واستخدم خبز دقيق الحبة الكاملة المحمص جيداً لتفادي أي عسر هضم ولإمداد جسمك بالطاقة.
+                    - تدرج بانتظام في تمرين اليوم المفتوح لك ولا تقم بتجاوز خطتك.
+                `;
+                safeSetText('ai-brief-text', "تم تحميل الخطة البدنية التقديرية بنجاح.");
+                safeSetHTML('ai-full-analysis-box', fallbackMsg);
+            }
+        }
+
+        async function handleSendChatMessage(event) {
+            event.preventDefault();
+            const input = document.getElementById('chat-input-field');
+            const userMsg = input.value.trim();
+            if (!userMsg) return;
+
+            input.value = '';
+            const chatBox = document.getElementById('chat-messages-box');
+
+            const userHtml = `
+                <div class="bg-orange-500 text-slate-950 p-3 rounded-2xl rounded-tr-none text-xs leading-relaxed max-w-[85%] self-end font-bold theme-primary-bg">
+                    ${userMsg}
+                </div>
+            `;
+            chatBox.insertAdjacentHTML('beforeend', userHtml);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const tempId = "loading-" + Date.now();
+            const loadingHtml = `
+                <div id="${tempId}" class="sub-panel-bg border border-main-color p-3 rounded-2xl rounded-tr-none text-xs text-slate-400 leading-relaxed max-w-[85%] animate-pulse">
+                    ثواني يا بطل الكابتن يفكر ويكتب الرد...
+                </div>
+            `;
+            chatBox.insertAdjacentHTML('beforeend', loadingHtml);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const systemPrompt = `
+                أنت كابتن رياضي وخبير في نظام الطيبات للدكتور ضياء العوضي بنسخته المطورة المخصصة (والتي تم فيها استبدال الدقيق الأبيض بدقيق الحبة الكاملة المحمص جيداً).
+                اسم المتدرب ${profile.name} وقياساته:  الوزن ${profile.weight} كجم، الطول ${profile.height} سم، مستوى اللياقة ${profile.level}. وملاحظاته الصحية: ${profile.healthNotes || "لا يوجد"}.
+                تحدث بالعامية المصرية الودية والشعبية جداً كأنك كابتن جيم مصري جدع وبسيط ومحفز.
+                نبه المتدرب بمسموحات نظام الطيبات المطور (مسموح: بطاطس مقشرة ومطبوخة، عيش أو توست دقيق الحبة الكاملة محمصاً جيداً، رز، لحوم بكل أنواعها، فواكه مقشرة. ممنوع: الدقيق الأبيض المكرر، الألبان، البقوليات، قشور الخضار والطماطم، الشوفان).
+            `;
+
+            try {
+                const response = await fetchAIResponse(userMsg, systemPrompt);
+                const loadingEl = document.getElementById(tempId);
+                if (loadingEl) loadingEl.remove();
+
+                let formatted = response
+                    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-orange-400 font-bold theme-primary-text">$1</strong>')
+                    .replace(/\n/g, '<br>');
+
+                const botHtml = `
+                    <div class="sub-panel-bg border border-main-color p-3 rounded-2xl rounded-tr-none text-xs text-main-color leading-relaxed max-w-[85%]">
+                        ${formatted}
+                    </div>
+                `;
+                chatBox.insertAdjacentHTML('beforeend', botHtml);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (err) {
+                const loadingEl = document.getElementById(tempId);
+                if (loadingEl) loadingEl.remove();
+                const errorHtml = `
+                    <div class="sub-panel-bg border border-rose-500/20 p-3 rounded-2xl rounded-tr-none text-xs text-rose-400 leading-relaxed max-w-[85%]">
+                        عذراً يا بطل! واجهنا مشكلة في الاتصال بالـ AI، يرجى المحاولة لاحقاً بعد التحقق من جودة الاتصال بالإنترنت.
+                    </div>
+                `;
+                chatBox.insertAdjacentHTML('beforeend', errorHtml);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        // --- RENDER 7 DAYS PLAN WITH PROGRESS LOCK ---
+        function renderWeeklyPlan() {
+            const container = document.getElementById('weekly-days-container');
+            if (!container) return;
+
+            container.innerHTML = '';
+            const todayKey = getTodayDayKey();
+
+            for (let dayKey in weeklyWorkoutsDB) {
+                const day = weeklyWorkoutsDB[dayKey];
+                const isFuture = parseInt(dayKey) > todayKey;
+                const isToday = parseInt(dayKey) === todayKey;
+
+                let dayCardHTML = "";
+
+                if (isFuture) {
+                    dayCardHTML = `
+                        <div class="panel-bg opacity-65 border border-main-color p-6 rounded-2xl flex flex-col items-center justify-center text-center gap-3 min-h-[300px]" id="weekly-locked-day-${dayKey}">
+                            <div class="p-3.5 bg-slate-800/50 dark:bg-slate-800/50 light:bg-slate-200 rounded-full text-slate-500">
+                                <i data-lucide="lock" class="w-8 h-8 text-slate-400 dark:text-slate-500 light:text-slate-700"></i>
+                            </div>
+                            <div>
+                                <span class="sub-panel-bg text-muted-color text-[10px] font-bold px-2.5 py-1 rounded-md border border-main-color">${day.dayName}</span>
+                                <h3 class="font-extrabold text-xs text-muted-color mt-3">تمرين مغلق ومحجوب 🔒</h3>
+                                <p class="text-[10px] text-slate-500 dark:text-slate-500 light:text-slate-600 mt-1 max-w-[180px] mx-auto">لا يمكنك الاطلاع على تمارين أو شروحات الأيام القادمة لحين حلول يومها المخصص.</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    let execItems = '';
+                    day.exercises.forEach((ex, idx) => {
+                        execItems += `
+                            <div class="sub-panel-bg border border-main-color flex flex-col gap-1 text-right p-2.5 rounded-lg">
+                                <div class="flex justify-between items-center text-[11px]">
+                                    <span class="font-bold text-main-color">${idx+1}. ${ex.name}</span>
+                                    <span class="bg-orange-500/10 text-orange-400 px-1.5 py-0.5 rounded text-[9px] font-black theme-primary-glow-bg theme-primary-text">${ex.sets} جولات × ${ex.reps}</span>
+                                </div>
+                                <p class="text-[10px] text-muted-color leading-relaxed"><strong class="text-amber-500">بالبلدي:</strong> ${ex.explanation}</p>
+                            </div>
+                        `;
+                    });
+
+                    const badgeClass = isToday ? 'bg-orange-500 text-slate-950 font-black animate-pulse theme-primary-bg' : 'bg-slate-800 text-slate-400 font-bold';
+
+                    dayCardHTML = `
+                        <div class="panel-bg border ${isToday ? 'border-orange-500/40 theme-primary-border' : 'border-main-color'} p-5 rounded-2xl flex flex-col gap-4 hover:border-orange-500/30 transition-all duration-300" id="weekly-active-day-${dayKey}">
+                            <div class="flex justify-between items-start border-b border-main-color pb-3">
+                                <div>
+                                    <span class="${badgeClass} text-[9px] px-2 py-0.5 rounded-md uppercase tracking-wider">${day.dayName}</span>
+                                    <h3 class="font-bold text-xs text-main-color mt-2">${day.title}</h3>
+                                </div>
+                                <div class="text-right text-[10px] text-muted-color">
+                                    <p class="font-bold text-orange-400">${day.calories} سعرة 🔥</p>
+                                    <p class="mt-0.5">${day.duration} دقيقة ⏱️</p>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-2 max-h-[180px] overflow-y-auto pr-1">
+                                ${execItems}
+                            </div>
+
+                            <button onclick="launchInteractiveWorkout('${dayKey}')" class="w-full mt-2 bg-orange-500 hover:bg-orange-600 text-slate-950 font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-md theme-primary-bg">
+                                ابدأ التمارين الآن 🚀
+                            </button>
+                        </div>
+                    `;
+                }
+
+                container.insertAdjacentHTML('beforeend', dayCardHTML);
+            }
+            lucide.createIcons();
+        }
+
+        // --- RENDER DYNAMIC DASHBOARD TODAY'S WORKOUT ---
+        function renderDashboardTodayWorkout() {
+            const todayKey = getTodayDayKey();
+            const todayData = weeklyWorkoutsDB[todayKey];
+            if (!todayData) return;
+
+            safeSetText('dash-today-name', todayData.dayName);
+
+            const previewList = document.getElementById('dash-today-preview-list');
+            if (previewList) {
+                previewList.innerHTML = '';
+                todayData.exercises.forEach((ex, idx) => {
+                    const itemHTML = `
+                        <div class="sub-panel-bg border border-main-color p-3 rounded-xl flex flex-col gap-1 text-right">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-main-color">${idx+1}. ${ex.name}</span>
+                                <span class="text-[10px] text-orange-400 theme-primary-text font-extrabold bg-orange-500/5 px-2 py-0.5 rounded">${ex.sets} جولات × ${ex.reps}</span>
+                            </div>
+                            <p class="text-[10px] text-muted-color"><strong class="text-amber-500">البلدي:</strong> ${ex.explanation}</p>
+                        </div>
+                    `;
+                    previewList.insertAdjacentHTML('beforeend', itemHTML);
+                });
+            }
+
+            const startBtn = document.getElementById('dash-start-workout-btn');
+            if (startBtn) {
+                startBtn.onclick = function() {
+                    launchInteractiveWorkout(todayKey.toString());
+                };
+            }
+        }
+
+        // --- DIET PLAN LOGGING & VALIDATOR ---
+        function handleDietLog(event) {
+            event.preventDefault();
+            const mType = document.getElementById('diet-meal-type').value;
+            const desc = document.getElementById('diet-meal-desc').value.trim();
+            if (!desc) return;
+
+            const forbiddenKeywords = ["دقيق أبيض", "دقيق ابيض", "فينو أبيض", "توست أبيض", "ألبان", "حليب", "لبن", "جبن", "جبنه", "قشطه", "عدس", "فول", "حمص", "بقوليات", "لوبيا", "فاصوليا", "طماطم", "صلصة", "شاي ثقيل", "قهوه", "قهوة"];
+            let hasForbidden = false;
+            let detectedForbidden = [];
+
+            forbiddenKeywords.forEach(kw => {
+                if (desc.includes(kw)) {
+                    hasForbidden = true;
+                    detectedForbidden.push(kw);
+                }
+            });
+
+            let feedback = "أحسنت! هذه وجبة متوافقة ومثالية مع مسموحات نظام الطيبات المطور ومفيدة للقولون. التوست/الفينو المصنوع من دقيق الحبة الكاملة ممتاز! 👍";
+            if (hasForbidden) {
+                feedback = `تنبيه! تم كشف مواد قد تكون ممنوعة بنظام الطيبات المطور مثل: (${detectedForbidden.join(', ')}). يفضل استبدالها بدقيق الحبة الكاملة المحمص جيداً واللحوم والأرز الأبيض. ⚠️`;
+            }
+
+            const newLog = {
+                id: Date.now().toString(36),
+                type: mType,
+                desc: desc,
+                feedback: feedback,
+                hasForbidden: hasForbidden,
+                date: new Date().toLocaleDateString('ar-EG')
+            };
+
+            dietLogs.unshift(newLog);
+            saveData();
+            document.getElementById('diet-meal-desc').value = '';
+            renderDietLogs();
+            showNotification(hasForbidden ? "وجبة غير مطابقة" : "تم فحص الوجبة", hasForbidden ? "الوجبة تحتوي على ممنوعات الطيبات." : "تم تسجيل وجبة الطيبات بنجاح.", !hasForbidden);
+        }
+
+        function renderDietLogs() {
+            const list = document.getElementById('diet-log-list');
+            if (!list) return;
+
+            list.innerHTML = '';
+            if (dietLogs.length === 0) {
+                list.innerHTML = '<p class="text-[10px] text-slate-500 text-center py-2">لم تسجل أي وجبات اليوم بعد.</p>';
+                return;
+            }
+
+            dietLogs.forEach(log => {
+                const card = document.createElement('div');
+                card.className = `p-2.5 rounded-lg border text-[10px] flex flex-col gap-1 ${log.hasForbidden ? 'bg-rose-500/5 border-rose-500/20' : 'sub-panel-bg border-main-color'}`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-center border-b border-main-color pb-1">
+                        <span class="font-bold text-main-color">${log.type} (${log.date})</span>
+                        <button onclick="deleteDietLog('${log.id}')" class="text-rose-400 hover:text-rose-300">
+                            <i data-lucide="trash" class="w-3 h-3"></i>
+                        </button>
+                    </div>
+                    <p class="text-main-color font-medium">أكلت: ${log.desc}</p>
+                    <p class="text-[9px] ${log.hasForbidden ? 'text-rose-400' : 'text-orange-400 theme-primary-text'} font-bold mt-1">${log.feedback}</p>
+                `;
+                list.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function deleteDietLog(id) {
+            dietLogs = dietLogs.filter(log => log.id !== id);
+            saveData();
+            renderDietLogs();
+            showNotification("تم الحذف", "تم إزالة وجبة الطعام المحددة.");
+        }
+
+        // --- NOTIFICATION & REMINDERS ---
+        function toggleNotifications(event) {
+            const isChecked = event.target.checked;
+            if (isChecked) {
+                if ("Notification" in window) {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === "granted") {
+                            profile.reminderEnabled = true;
+                            saveData();
+                            showNotification("تم تفعيل التنبيهات", "ستصلك إشعارات وتنبيهات صوتية في الوقت المحدد بنجاح! 🔔");
+                        } else {
+                            event.target.checked = false;
+                            profile.reminderEnabled = false;
+                            saveData();
+                            showNotification("التنبيهات معطلة", "يرجى منح صلاحية الإشعارات للمتصفح لتفعيل التذكير.", false);
+                        }
+                    });
+                } else {
+                    profile.reminderEnabled = true;
+                    saveData();
+                    showNotification("تفعيل التنبيه الداخلي", "المتصفح لا يدعم التنبيه الخارجي، تم تفعيل التنبيه الصوتي الداخلي فقط.");
+                }
+            } else {
+                profile.reminderEnabled = false;
+                saveData();
+                showNotification("تم التعطيل", "تم إلغاء التنبيهات الرياضية اليومية.");
+            }
+        }
+
+        function updateReminderTime() {
+            const timeVal = document.getElementById('reminder-time-input').value;
+            if (timeVal) {
+                profile.reminderTime = timeVal;
+                saveData();
+                showNotification("تم تحديث الوقت", `سيتم تذكيرك يومياً بالتمرين في تمام الساعة ${timeVal} ⏰`);
+            }
+        }
+
+        function initNotificationPoller() {
+            if (reminderInterval) clearInterval(reminderInterval);
+
+            reminderInterval = setInterval(() => {
+                if (!profile.reminderEnabled) return;
+
+                const now = new Date();
+                const currentHours = String(now.getHours()).padStart(2, '0');
+                const currentMinutes = String(now.getMinutes()).padStart(2, '0');
+                const currentTime = `${currentHours}:${currentMinutes}`;
+
+                if (currentTime === profile.reminderTime) {
+                    const lastTriggerMinute = localStorage.getItem('fithome_last_reminder_minute');
+                    if (lastTriggerMinute === currentTime) return;
+
+                    localStorage.setItem('fithome_last_reminder_minute', currentTime);
+
+                    playAlertSound(600, 0.2);
+                    setTimeout(() => playAlertSound(800, 0.2), 200);
+                    setTimeout(() => playAlertSound(1000, 0.4), 400);
+
+                    if ("Notification" in window && Notification.permission === "granted") {
+                        new Notification("MUSCLEUP - حان وقت التمرين! 💪", {
+                            body: "يا بطل، حان وقت تمرين اليوم المخصص لك بنظام الطيبات! اضغط لبدء التدريب التفاعلي فوراً.",
+                            icon: "https://cdn-icons-png.flaticon.com/512/2936/2936886.png"
+                        });
+                    }
+
+                    showNotification("⏰ وقت التمرين الآن!", "يا بطل، حان وقت أداء تمرين اليوم المخصص! اضغط للبدء.", true);
+                }
+            }, 30000);
+        }
+
+        // --- INTERACTIVE WORKOUT ENGINE ---
+        let activeWorkoutSession = null;
+        let activeExecIdx = 0;
+        let activeSetNum = 1;
+        let restInterval = null;
+        let restSecondsLeft = 30;
+
+        function launchInteractiveWorkout(dayKey) {
+            const dayData = weeklyWorkoutsDB[dayKey];
+            if (!dayData) return;
+
+            activeWorkoutSession = {
+                dayKey: dayKey,
+                dayName: dayData.dayName,
+                title: dayData.title,
+                duration: dayData.duration,
+                calories: dayData.calories,
+                exercises: JSON.parse(JSON.stringify(dayData.exercises))
+            };
+
+            activeExecIdx = 0;
+            activeSetNum = 1;
+
+            safeSetText('companion-day-badge', dayData.dayName);
+            safeSetText('companion-day-title', dayData.title);
+
+            safeToggleClass('companion-setup', 'hidden', false);
+            safeToggleClass('companion-active-panel', 'hidden', true);
+            safeToggleClass('companion-success-screen', 'hidden', false);
+
+            switchTab('active-workout');
+            renderCompanionExerciseStep();
+        }
+
+        function renderCompanionExerciseStep() {
+            if (!activeWorkoutSession) return;
+
+            const exercises = activeWorkoutSession.exercises;
+            if (activeExecIdx >= exercises.length) {
+                triggerWorkoutSessionComplete();
+                return;
+            }
+
+            const currentEx = exercises[activeExecIdx];
+
+            safeSetText('companion-exec-number', `تمرين ${activeExecIdx + 1} من ${exercises.length}`);
+            safeSetText('companion-exec-name', currentEx.name);
+            safeSetText('companion-exec-sets-info', `${currentEx.sets} جولات × ${currentEx.reps}`);
+            safeSetText('companion-exec-explanation', currentEx.explanation);
+
+            safeSetText('current-set-count', activeSetNum);
+            safeSetText('total-set-count', currentEx.sets);
+            safeSetHTML('current-rep-target-desc', `الهدف الحالي: العب <strong class="text-orange-450 font-bold theme-primary-text">${currentEx.reps}</strong> ثم اضغط لإكمال الجولة.`);
+
+            safeToggleClass('state-normal-exercise', 'hidden', true);
+            safeToggleClass('state-rest-timer', 'hidden', false);
+
+            const pct = Math.round((activeExecIdx / exercises.length) * 100);
+            document.getElementById('workout-progress-bar').style.width = `${pct}%`;
+            safeSetText('workout-progress-pct', `${pct}%`);
+        }
+
+        function completeCurrentSet() {
+            if (!activeWorkoutSession) return;
+            const currentEx = activeWorkoutSession.exercises[activeExecIdx];
+
+            playAlertSound(700, 0.12);
+
+            if (activeSetNum < currentEx.sets) {
+                startRestPeriod(30);
+            } else {
+                activeSetNum = 1;
+                activeExecIdx++;
+                startRestPeriod(45);
+            }
+        }
+
+        function startRestPeriod(seconds) {
+            clearInterval(restInterval);
+            restSecondsLeft = seconds;
+
+            safeToggleClass('state-normal-exercise', 'hidden', false);
+            safeToggleClass('state-rest-timer', 'hidden', true);
+
+            safeSetText('rest-countdown', restSecondsLeft);
+
+            restInterval = setInterval(() => {
+                restSecondsLeft--;
+                safeSetText('rest-countdown', restSecondsLeft);
+
+                if (restSecondsLeft <= 3 && restSecondsLeft > 0) {
+                    playAlertSound(500, 0.08);
+                }
+
+                if (restSecondsLeft <= 0) {
+                    clearInterval(restInterval);
+                    playAlertSound(880, 0.15);
+                    setTimeout(() => playAlertSound(1000, 0.2), 150);
+
+                    if (activeSetNum === 1 && restSecondsLeft === 0) {
+                        // Advanced already
+                    } else {
+                        activeSetNum++;
+                    }
+
+                    renderCompanionExerciseStep();
+                }
+            }, 1000);
+        }
+
+        function skipRest() {
+            clearInterval(restInterval);
+            playAlertSound(1000, 0.15);
+            if (activeSetNum === 1 && restSecondsLeft === 0) {
+                // Advanced
+            } else {
+                activeSetNum++;
+            }
+            renderCompanionExerciseStep();
+        }
+
+        function triggerWorkoutSessionComplete() {
+            clearInterval(restInterval);
+            
+            playAlertSound(600, 0.1);
+            setTimeout(() => playAlertSound(800, 0.1), 120);
+            setTimeout(() => playAlertSound(1100, 0.35), 240);
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            const nameCompleted = activeWorkoutSession.dayName;
+            const caloriesEarned = activeWorkoutSession.calories;
+            const durationUsed = activeWorkoutSession.duration;
+
+            const finalLog = {
+                id: Date.now().toString(36),
+                name: nameCompleted,
+                sets: "الكل",
+                reps: "الكل",
+                duration: durationUsed,
+                calories: caloriesEarned,
+                date: todayStr,
+                notes: "تم إكمال كامل التمرين بنجاح من خلال رفيق التدريب التفاعلي المخصص لـ MUSCLEUP."
+            };
+
+            const lastLogDate = localStorage.getItem('fithome_last_log_date');
+            const today = new Date().toDateString();
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+
+            if (!lastLogDate) {
+                streak = 1;
+            } else {
+                const lastLogStr = new Date(lastLogDate).toDateString();
+                if (lastLogStr === yesterday) {
+                    streak += 1;
+                } else if (lastLogStr !== today) {
+                    streak = 1;
+                }
+            }
+
+            workouts.push(finalLog);
+            localStorage.setItem('fithome_last_log_date', todayStr);
+            saveData();
+
+            safeSetText('success-stat-cals', `${caloriesEarned} سعرة 🔥`);
+            safeSetText('success-stat-time', `${durationUsed} دقيقة ⏱️`);
+            safeSetText('success-stat-streak', `+${streak} يوم متتالي`);
+
+            safeToggleClass('companion-active-panel', 'hidden', false);
+            safeToggleClass('companion-success-screen', 'hidden', true);
+
+            updateUI();
+            updateChartData();
+        }
+
+        function dismissSuccessAndHome() {
+            activeWorkoutSession = null;
+            safeToggleClass('companion-success-screen', 'hidden', false);
+            safeToggleClass('companion-setup', 'hidden', true);
+            switchTab('dashboard');
+        }
+
+        // --- GENERAL REFRESHES ---
+        function updateUI() {
+            safeSetText('streak-count', streak);
+            safeSetText('total-workouts', workouts.length);
+
+            safeSetText('welcome-badge', `مرحباً بك يا بطل، ${profile.name}! 💪`);
+            safeSetText('user-profile-title', `الملف البدني لـ ${profile.name}`);
+
+            safeSetText('prof-spec-age', `السن: ${profile.age} سنة`);
+            safeSetText('prof-spec-weight', `الوزن: ${profile.weight} كجم`);
+            safeSetText('prof-spec-body', `الجسم: ${profile.bodyType}`);
+            safeSetText('prof-spec-level', `اللياقة: ${profile.level}`);
+
+            const photoElContainer = document.getElementById('dash-profile-photo-container');
+            const photoEl = document.getElementById('dash-profile-photo');
+            if (photoElContainer && photoEl && profile.bodyPhoto) {
+                photoEl.src = profile.bodyPhoto;
+                photoElContainer.classList.remove('hidden');
+            } else if (photoElContainer) {
+                photoElContainer.classList.add('hidden');
+            }
+
+            if (profile.healthNotes) {
+                safeToggleClass('dash-health-notes-wrapper', 'hidden', true);
+                safeSetText('dash-health-notes', profile.healthNotes);
+            } else {
+                safeToggleClass('dash-health-notes-wrapper', 'hidden', false);
+            }
+
+            const toggleInput = document.getElementById('reminder-toggle');
+            if (toggleInput) toggleInput.checked = profile.reminderEnabled || false;
+
+            const timeInput = document.getElementById('reminder-time-input');
+            if (timeInput) timeInput.value = profile.reminderTime || "18:00";
+
+            const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+            const weeklyCount = workouts.filter(w => new Date(w.date).getTime() > oneWeekAgo).length;
+            safeSetHTML('stat-weekly-count', `${weeklyCount} <span class="text-[10px] font-normal text-muted-color">أسبوعياً</span>`);
+
+            let totalCals = 0;
+            let totalMins = 0;
+            workouts.forEach(w => {
+                totalCals += w.calories;
+                totalMins += w.duration;
+            });
+            safeSetHTML('stat-calories', `${totalCals} <span class="text-[10px] font-normal text-muted-color">سعرة</span>`);
+            safeSetHTML('stat-duration', `${totalMins} <span class="text-[10px] font-normal text-muted-color">دقيقة</span>`);
+
+            if (workouts.length > 0) {
+                const sorted = [...workouts].sort((a,b) => new Date(b.date) - new Date(a.date));
+                safeSetText('stat-last-workout', sorted[0].name);
+            } else {
+                safeSetText('stat-last-workout', "لا يوجد بيانات");
+            }
+
+            populateHistoryTable();
+            renderDashboardTodayWorkout();
+        }
+
+        function populateHistoryTable() {
+            const tbody = document.getElementById('history-table-body');
+            const cardsContainer = document.getElementById('history-cards-container');
+            const emptyState = document.getElementById('history-empty');
+
+            if (tbody) tbody.innerHTML = '';
+            if (cardsContainer) cardsContainer.innerHTML = '';
+
+            if (workouts.length === 0) {
+                if (emptyState) emptyState.classList.remove('hidden');
+                return;
+            } else {
+                if (emptyState) emptyState.classList.add('hidden');
+            }
+
+            const sorted = [...workouts].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            sorted.forEach(w => {
+                if (tbody) {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:panel-bg-hover transition-all border-b border-main-color";
+                    tr.innerHTML = `
+                        <td class="p-4 text-muted-color font-medium">${new Date(w.date).toLocaleDateString('ar-EG')}</td>
+                        <td class="p-4 text-main-color font-bold">${w.name}</td>
+                        <td class="p-4 text-muted-color">الكل مكمل (جولات تفاعلية)</td>
+                        <td class="p-4 text-emerald-400 font-bold">${w.duration} د</td>
+                        <td class="p-4 text-orange-400 font-bold">${w.calories}</td>
+                        <td class="p-4 text-center">
+                            <button onclick="deleteWorkout('${w.id}')" class="text-rose-450 hover:text-rose-350 transition-all p-1.5 rounded-lg hover:bg-rose-500/10" title="حذف">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+
+                if (cardsContainer) {
+                    const card = document.createElement('div');
+                    card.className = "p-4 flex flex-col gap-2 panel-bg border border-main-color rounded-xl";
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-[9px] text-muted-color">${new Date(w.date).toLocaleDateString('ar-EG')}</span>
+                                <h4 class="font-bold text-xs text-main-color mt-0.5">${w.name}</h4>
+                            </div>
+                            <button onclick="deleteWorkout('${w.id}')" class="text-rose-450 hover:text-rose-350 p-1 rounded hover:bg-rose-500/10">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-center text-[10px] mt-1">
+                            <div class="sub-panel-bg p-1.5 rounded-lg border border-main-color">
+                                <span class="text-muted-color block text-[9px]">الجولات</span>
+                                <span class="font-bold text-main-color mt-0.5">مكتمل ✔️</span>
+                            </div>
+                            <div class="sub-panel-bg p-1.5 rounded-lg border border-main-color">
+                                <span class="text-muted-color block text-[9px]">المدة</span>
+                                <span class="font-bold text-emerald-400 mt-0.5">${w.duration} دقيقة</span>
+                            </div>
+                            <div class="sub-panel-bg p-1.5 rounded-lg border border-main-color">
+                                <span class="text-muted-color block text-[9px]">السعرات</span>
+                                <span class="font-bold text-orange-400 mt-0.5">${w.calories} سعرة</span>
+                            </div>
+                        </div>
+                    `;
+                    cardsContainer.appendChild(card);
+                }
+            });
+
+            lucide.createIcons();
+        }
+
+        function deleteWorkout(id) {
+            workouts = workouts.filter(w => w.id !== id);
+            saveData();
+            updateUI();
+            updateChartData();
+            showNotification("تم الحذف", "تم إزالة التمرين من السجلات.", false);
+        }
+
+        function clearHistory() {
+            workouts = [];
+            streak = 0;
+            localStorage.removeItem('fithome_last_log_date');
+            saveData();
+            updateUI();
+            updateChartData();
+            showNotification("تم تصفير السجل", "تم مسح التاريخ بالكامل بنجاح.", false);
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
+            const desktopBtn = document.getElementById(`tab-${tabId}-btn`);
+            if (desktopBtn) desktopBtn.classList.add('active-tab');
+
+            document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-400');
+            });
+            const mobileBtn = document.getElementById(`mob-${tabId}-btn`);
+            if (mobileBtn) {
+                mobileBtn.classList.add('active-tab');
+                mobileBtn.classList.remove('text-slate-400');
+            }
+        }
+
+        function showNotification(title, msg, isSuccess = true) {
+            const toast = document.getElementById('toast-notification');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMsg = document.getElementById('toast-msg');
+
+            toastTitle.innerText = title;
+            toastMsg.innerText = msg;
+
+            if (isSuccess) {
+                toast.classList.remove('border-rose-500/40');
+                toast.classList.add('border-orange-500/40');
+            } else {
+                toast.classList.remove('border-orange-500/40');
+                toast.classList.add('border-rose-500/40');
+            }
+
+            toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-[-150%]', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+
+        // --- LINE CHART RENDER & REFRESH ---
+        function initChart() {
+            const ctx = document.getElementById('workout-chart').getContext('2d');
+            const isDarkMode = document.body.classList.contains('dark');
+            const textColor = isDarkMode ? '#94a3b8' : '#475569';
+            const gridColor = isDarkMode ? '#1e293b' : '#e2e8f0';
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'عدد التمارين',
+                        data: [],
+                        borderColor: profile.primaryColor || '#f97316',
+                        backgroundColor: profile.primaryGlow || 'rgba(249, 115, 22, 0.08)',
+                        borderWidth: 3,
+                        tension: 0.35,
+                        fill: true,
+                        pointBackgroundColor: profile.primaryColor || '#f97316',
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { family: profile.appFont || 'Cairo', size: 10 }, stepSize: 1 },
+                            beginAtZero: true
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: textColor, font: { family: profile.appFont || 'Cairo', size: 10 } }
+                        }
+                    }
+                }
+            });
+            updateChartData();
+        }
+
+        function updateChartData() {
+            if (!chartInstance) return;
+
+            const daysArr = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            const labels = [];
+            const counts = [];
+
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(Date.now() - (i * 24 * 60 * 60 * 1000));
+                labels.push(daysArr[d.getDay()]);
+
+                const dStr = d.toDateString();
+                const count = workouts.filter(w => new Date(w.date).toDateString() === dStr).length;
+                counts.push(count);
+            }
+
+            chartInstance.data.labels = labels;
+            chartInstance.data.datasets[0].data = counts;
+            chartInstance.update();
+        }
+    </script>
+</body>
+</html>
