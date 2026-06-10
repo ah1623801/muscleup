@@ -19,7 +19,7 @@
     <link rel="manifest" href="manifest.json">
 
     <style>
-        /* */
+        /* المتغيرات الأساسية (الوضع المظلم الافتراضي) */
         :root {
             --font-family: 'Cairo', sans-serif;
             --primary-color: #f97316;
@@ -35,22 +35,42 @@
             --border-sub-color: #334155;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
+            --text-strong: #ffffff;
             --input-bg: #111827;
+
+            /* Tayyebat Section Smart Colors - Dark */
+            --tayyebat-allow-bg: rgba(16, 185, 129, 0.15);
+            --tayyebat-allow-border: rgba(16, 185, 129, 0.25);
+            --tayyebat-allow-text: #34d399; /* emerald-400 */
+            
+            --tayyebat-deny-bg: rgba(244, 63, 94, 0.15);
+            --tayyebat-deny-border: rgba(244, 63, 94, 0.25);
+            --tayyebat-deny-text: #fb7185; /* rose-400 */
         }
 
+        /* متغيرات الوضع الفاتح (Light Mode) - محسنة بالكامل لتكون ناعمة وواضحة */
         body.light {
-            --bg-color: #f1f5f9;
+            --bg-color: #f4f4f9;
             --panel-bg: #ffffff;
-            --panel-bg-hover: #f8fafc;
+            --panel-bg-hover: #f9fafb;
             --sub-panel-bg: #f8fafc;
-            --border-color: #e2e8f0;
-            --border-sub-color: #cbd5e1;
-            --text-main: #0f172a;
+            --border-color: #e5e7eb;
+            --border-sub-color: #d1d5db;
+            --text-main: #334155;
             --text-muted: #64748b;
+            --text-strong: #0f172a;
             --input-bg: #ffffff;
+
+            /* Tayyebat Section Smart Colors - Light */
+            --tayyebat-allow-bg: rgba(16, 185, 129, 0.08);
+            --tayyebat-allow-border: rgba(16, 185, 129, 0.3);
+            --tayyebat-allow-text: #059669; /* emerald-600 */
+            
+            --tayyebat-deny-bg: rgba(244, 63, 94, 0.08);
+            --tayyebat-deny-border: rgba(244, 63, 94, 0.3);
+            --tayyebat-deny-text: #e11d48; /* rose-600 */
         }
 
-        /* */
         body {
             font-family: var(--font-family);
             background-color: var(--bg-color);
@@ -60,11 +80,13 @@
             overflow-x: hidden;
         }
 
+        /* Classes المساعدة للمتغيرات الذكية */
         .app-bg { background-color: var(--bg-color) !important; }
         .panel-bg { background-color: var(--panel-bg) !important; }
         .sub-panel-bg { background-color: var(--sub-panel-bg) !important; }
         .text-main-color { color: var(--text-main) !important; }
         .text-muted-color { color: var(--text-muted) !important; }
+        .text-strong-color { color: var(--text-strong) !important; }
         .border-main-color { border-color: var(--border-color) !important; }
         .border-sub-color { border-color: var(--border-sub-color) !important; }
         
@@ -79,7 +101,24 @@
             box-shadow: 0 0 0 3px var(--primary-glow);
         }
 
-        /* */
+        /* كروت الطيبات المخصصة */
+        .tayyebat-allow-card {
+            background-color: var(--tayyebat-allow-bg);
+            border-color: var(--tayyebat-allow-border);
+        }
+        .tayyebat-allow-card .card-title { color: var(--tayyebat-allow-text); }
+        .tayyebat-allow-card ul { color: var(--text-muted); }
+        .tayyebat-allow-card strong { color: var(--text-strong); }
+
+        .tayyebat-deny-card {
+            background-color: var(--tayyebat-deny-bg);
+            border-color: var(--tayyebat-deny-border);
+        }
+        .tayyebat-deny-card .card-title { color: var(--tayyebat-deny-text); }
+        .tayyebat-deny-card ul { color: var(--text-muted); }
+        .tayyebat-deny-card strong { color: var(--text-strong); }
+
+        /* التمرير (Scrollbar) */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -100,7 +139,17 @@
         .theme-primary-border { border-color: var(--primary-color) !important; }
         .theme-primary-glow-bg { background-color: var(--primary-glow) !important; }
 
-        /* */
+        /* التدرج اللوني للنصوص يتبع لون الثيم */
+        .theme-gradient-text {
+            background: linear-gradient(to right, var(--primary-color), var(--primary-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        /* Animations */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
@@ -109,7 +158,6 @@
             animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        /* --- Onboarding & Forms Animations --- */
         @keyframes slideInNext {
             from { opacity: 0; transform: translateX(-40px); }
             to { opacity: 1; transform: translateX(0); }
@@ -121,7 +169,6 @@
         .step-animate-next { animation: slideInNext 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
         .step-animate-prev { animation: slideInPrev 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
         
-        /* حركة الاهتزاز عند الخطأ */
         @keyframes shakeError {
             0%, 100% { transform: translateX(0); }
             20%, 60% { transform: translateX(-6px); }
@@ -134,8 +181,8 @@
         }
 
         @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(249, 115, 22, 0.15); border-color: rgba(249, 115, 22, 0.2); }
-            50% { box-shadow: 0 0 25px rgba(249, 115, 22, 0.35); border-color: rgba(249, 115, 22, 0.6); }
+            0%, 100% { box-shadow: 0 0 15px var(--primary-glow); border-color: var(--primary-color); }
+            50% { box-shadow: 0 0 25px var(--primary-glow); border-color: var(--primary-hover); }
         }
         .animate-pulse-glow { animation: pulseGlow 3s infinite ease-in-out; }
 
@@ -144,15 +191,19 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+        
+        /* ربط الأزرار بلون الثيم المختار تلقائياً */
         .premium-gradient-btn {
-            background: linear-gradient(270deg, #f97316, #f43f5e, #ea580c);
+            background: linear-gradient(270deg, var(--primary-color), var(--primary-hover), var(--primary-color));
             background-size: 600% 600%;
             animation: shimmerBg 6s ease infinite;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #ffffff !important;
+            border: none;
         }
         .premium-gradient-btn:hover {
             transform: scale(1.025);
-            box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
+            box-shadow: 0 10px 20px var(--primary-glow);
         }
         
         .active-tab {
@@ -182,20 +233,20 @@
 
         #loading-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #060911; display: flex; justify-content: center; align-items: center;
+            background-color: var(--bg-color); display: flex; justify-content: center; align-items: center;
             z-index: 99999; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
         }
         .loader-content { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-        .loader-logo { width: 100px; height: auto; filter: drop-shadow(0 0 20px rgba(249, 115, 22, 0.6)); animation: pulse 1.8s infinite ease-in-out; }
+        .loader-logo { width: 100px; height: auto; filter: drop-shadow(0 0 20px var(--primary-glow)); animation: pulse 1.8s infinite ease-in-out; }
         .loader-text {
-            background: linear-gradient(135deg, #f97316, #ea580c);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             font-size: 2.2rem; font-weight: 900; margin: 0; letter-spacing: 2px; text-transform: uppercase;
         }
         .loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         .hover-lift { transition: transform 0.30s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.30s ease, border-color 0.30s ease; }
-        .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); border-color: rgba(249, 115, 22, 0.25); }
+        .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1); border-color: var(--primary-glow); }
     </style>
 </head>
 <body class="dark h-screen flex flex-col overflow-hidden">
@@ -205,72 +256,72 @@
         <div class="loader-content">
             <img src="favicon.png" alt="Logo" class="loader-logo">
             <h1 class="loader-text">MUSCLEUP</h1>
-            <div class="w-12 h-12 border-4 border-orange-500/15 border-t-orange-500 rounded-full animate-spin"></div>
+            <div class="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin theme-primary-border" style="border-right-color: var(--primary-glow); border-bottom-color: var(--primary-glow); border-left-color: var(--primary-glow);"></div>
         </div>
     </div>
 
     <!-- APP CHIC LOADING SCREEN -->
-    <div id="app-loading-screen" class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center transition-all duration-700 ease-out">
+    <div id="app-loading-screen" class="fixed inset-0 z-50 app-bg flex flex-col items-center justify-center transition-all duration-700 ease-out">
         <div class="flex flex-col items-center gap-5 text-center px-4">
             <div class="relative">
-                <div class="absolute inset-0 bg-orange-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
-                <div class="relative bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-2xl text-orange-500 animate-float">
+                <div class="absolute inset-0 rounded-full blur-3xl opacity-20 animate-pulse theme-primary-bg"></div>
+                <div class="relative panel-bg border border-main-color p-6 rounded-3xl shadow-2xl theme-primary-text animate-float">
                     <img src="favicon.png" alt="Logo" class="w-16 h-16 object-contain">
                 </div>
             </div>
             <div class="mt-2">
-                <h2 class="text-2xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent tracking-wider">MUSCLEUP</h2>
-                <p class="text-xs text-slate-400 mt-2 tracking-wide font-medium">جاري تهيئة جدول التمارين المطور ومستشار الطيبات...</p>
+                <h2 class="text-2xl font-black theme-gradient-text tracking-wider">MUSCLEUP</h2>
+                <p class="text-xs text-muted-color mt-2 tracking-wide font-medium">جاري تهيئة جدول التمارين المطور ومستشار الطيبات...</p>
             </div>
-            <div class="w-48 h-1.5 bg-slate-900 rounded-full overflow-hidden mt-1 border border-slate-800/50">
-                <div id="loading-progress-bar" class="h-full bg-orange-500 theme-primary-bg transition-all duration-[1000ms] ease-out" style="width: 0%"></div>
+            <div class="w-48 h-1.5 sub-panel-bg rounded-full overflow-hidden mt-1 border border-sub-color">
+                <div id="loading-progress-bar" class="h-full theme-primary-bg transition-all duration-[1000ms] ease-out" style="width: 0%"></div>
             </div>
         </div>
     </div>
 
-    <!-- ONBOARDING MODAL OVERLAY (With Glassmorphism) -->
+    <!-- ONBOARDING MODAL OVERLAY -->
     <div id="onboarding-overlay" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto hidden transition-all duration-500">
-        <div class="bg-slate-900 border border-slate-800/80 rounded-3xl w-full max-w-2xl p-6 md:p-8 flex flex-col gap-6 shadow-2xl relative text-slate-100 my-auto">
-            <div class="absolute top-6 left-6 text-orange-500 opacity-20">
+        <div class="panel-bg border border-main-color rounded-3xl w-full max-w-2xl p-6 md:p-8 flex flex-col gap-6 shadow-2xl relative text-main-color my-auto">
+            <div class="absolute top-6 left-6 theme-primary-text opacity-20">
                 <i data-lucide="sparkles" class="w-16 h-16 animate-pulse"></i>
             </div>
             
             <div class="text-center">
-                <h2 class="text-2xl md:text-3xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">تخصيص نظامك البدني والغذائي التلقائي</h2>
-                <p class="text-xs md:text-sm text-slate-400 mt-2 font-medium leading-relaxed">أدخل قياسات جسمك ليقوم النظام التلقائي بتهيئة جدول تمارينك وجولات الاستشفاء بما يناسب كتلتك الحالية</p>
+                <h2 class="text-2xl md:text-3xl font-black theme-gradient-text">تخصيص نظامك البدني والغذائي التلقائي</h2>
+                <p class="text-xs md:text-sm text-muted-color mt-2 font-medium leading-relaxed">أدخل قياسات جسمك ليقوم النظام التلقائي بتهيئة جدول تمارينك وجولات الاستشفاء بما يناسب كتلتك الحالية</p>
             </div>
 
             <!-- Steps indicators -->
             <div class="flex justify-between items-center max-w-md mx-auto w-full gap-2 mt-2">
-                <div id="step-ind-1" class="h-2 flex-1 rounded-full bg-orange-500 theme-primary-bg transition-all duration-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]"></div>
-                <div id="step-ind-2" class="h-2 flex-1 rounded-full bg-slate-800 transition-all duration-500"></div>
-                <div id="step-ind-3" class="h-2 flex-1 rounded-full bg-slate-800 transition-all duration-500"></div>
+                <div id="step-ind-1" class="h-2 flex-1 rounded-full theme-primary-bg transition-all duration-500 shadow-md"></div>
+                <div id="step-ind-2" class="h-2 flex-1 rounded-full sub-panel-bg transition-all duration-500"></div>
+                <div id="step-ind-3" class="h-2 flex-1 rounded-full sub-panel-bg transition-all duration-500"></div>
             </div>
 
             <form id="onboarding-form" onsubmit="handleOnboardingSubmit(event)" class="flex flex-col gap-5 overflow-hidden">
-                <!-- STEP 1: Basic Information -->
+                <!-- STEP 1 -->
                 <div id="step-panel-1" class="step-panel flex flex-col gap-4">
-                    <h3 class="text-md font-bold text-orange-400 theme-primary-text border-b border-slate-800 pb-2">الخطوة 1: البيانات الشخصية</h3>
+                    <h3 class="text-md font-bold theme-primary-text border-b border-main-color pb-2">الخطوة 1: البيانات الشخصية</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="flex flex-col gap-1.5">
-                            <label class="text-xs text-slate-400 font-bold">الاسم الكريم</label>
+                            <label class="text-xs text-muted-color font-bold">الاسم الكريم</label>
                             <input type="text" id="ob-name" placeholder="أدخل اسمك هنا" class="input-style border rounded-xl p-3.5 text-sm focus:outline-none" required>
                         </div>
                         <div class="flex flex-col gap-1.5">
-                            <label class="text-xs text-slate-400 font-bold">السن (بالسنوات)</label>
+                            <label class="text-xs text-muted-color font-bold">السن (بالسنوات)</label>
                             <input type="number" id="ob-age" min="10" max="100" placeholder="مثال: 26" class="input-style border rounded-xl p-3.5 text-sm text-center focus:outline-none" required>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="flex flex-col gap-1.5">
-                            <label class="text-xs text-slate-400 font-bold">الجنس</label>
+                            <label class="text-xs text-muted-color font-bold">الجنس</label>
                             <select id="ob-gender" class="input-style border rounded-xl p-3.5 text-sm focus:outline-none" onchange="updateOnboardingCalculatedPreview()">
                                 <option value="ذكر" selected>ذكر</option>
                                 <option value="أنثى">أنثى</option>
                             </select>
                         </div>
                         <div class="flex flex-col gap-1.5">
-                            <label class="text-xs text-slate-400 font-bold">مستوى اللياقة الحالي</label>
+                            <label class="text-xs text-muted-color font-bold">مستوى اللياقة الحالي</label>
                             <select id="ob-level" class="input-style border rounded-xl p-3.5 text-sm focus:outline-none" onchange="updateOnboardingCalculatedPreview()">
                                 <option value="مبتدئ" selected>مبتدئ (تأسيس ورتم هادئ)</option>
                                 <option value="متوسط">متوسط (أداء معتدل وتحمل طبيعي)</option>
@@ -280,48 +331,48 @@
                     </div>
                 </div>
 
-                <!-- STEP 2: Body Metrics and Dynamic Analysis -->
+                <!-- STEP 2 -->
                 <div id="step-panel-2" class="step-panel hidden flex flex-col gap-4">
-                    <h3 class="text-md font-bold text-orange-400 theme-primary-text border-b border-slate-800 pb-2">الخطوة 2: القياسات البدنية لتوليد البرمجة تلقائياً</h3>
+                    <h3 class="text-md font-bold theme-primary-text border-b border-main-color pb-2">الخطوة 2: القياسات البدنية لتوليد البرمجة تلقائياً</h3>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="flex flex-col gap-1.5">
-                            <label class="text-xs text-slate-400 font-bold">الوزن الحالي (كجم)</label>
+                            <label class="text-xs text-muted-color font-bold">الوزن الحالي (كجم)</label>
                             <input type="number" id="ob-weight" min="30" max="250" placeholder="مثال: 80" class="input-style border rounded-xl p-3.5 text-sm text-center focus:outline-none" oninput="updateOnboardingCalculatedPreview()" required>
                         </div>
                         <div class="flex flex-col gap-1.5">
-                            <label class="text-xs text-slate-400 font-bold">الطول الحالي (سم)</label>
+                            <label class="text-xs text-muted-color font-bold">الطول الحالي (سم)</label>
                             <input type="number" id="ob-height" min="100" max="250" placeholder="مثال: 178" class="input-style border rounded-xl p-3.5 text-sm text-center focus:outline-none" oninput="updateOnboardingCalculatedPreview()" required>
                         </div>
                     </div>
                     
                     <div class="mt-3">
-                        <span class="text-xs text-slate-400 font-bold block mb-2">التحليل والمؤشرات الرياضية التلقائية المستخرجة:</span>
+                        <span class="text-xs text-muted-color font-bold block mb-2">التحليل والمؤشرات الرياضية التلقائية المستخرجة:</span>
                         <div id="ob-preview-metrics">
-                            <p class="text-[11px] text-slate-500 italic text-center py-4 bg-slate-950/20 rounded-xl border border-slate-800">أدخل الطول والوزن لتوليد التحليل الفوري...</p>
+                            <p class="text-[11px] text-muted-color italic text-center py-4 sub-panel-bg rounded-xl border border-main-color">أدخل الطول والوزن لتوليد التحليل الفوري...</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- STEP 3: Extra Notes & Photo Upload -->
+                <!-- STEP 3 -->
                 <div id="step-panel-3" class="step-panel hidden flex flex-col gap-4">
-                    <h3 class="text-md font-bold text-orange-400 theme-primary-text border-b border-slate-800 pb-2">الخطوة 3: التخصيص النهائي</h3>
+                    <h3 class="text-md font-bold theme-primary-text border-b border-main-color pb-2">الخطوة 3: التخصيص النهائي</h3>
                     <div class="flex flex-col gap-3">
                         <div class="flex flex-col gap-1">
-                            <label class="text-xs text-slate-300 font-bold flex items-center gap-1.5">
-                                <i data-lucide="image" class="w-4 h-4 text-orange-400 theme-primary-text"></i>
+                            <label class="text-xs text-main-color font-bold flex items-center gap-1.5">
+                                <i data-lucide="image" class="w-4 h-4 theme-primary-text"></i>
                                 صورة لشكل الجسم الحالي (اختياري)
                             </label>
-                            <input type="file" id="ob-photo-input" accept="image/*" onchange="handleBodyPhotoUpload(event)" class="text-xs text-slate-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-orange-500 hover:file:bg-slate-700 cursor-pointer">
-                            <div id="ob-photo-preview-container" class="hidden mt-2 flex items-center gap-3 sub-panel-bg p-2 rounded-xl border border-slate-800">
-                                <img id="ob-photo-preview" class="w-16 h-16 object-cover rounded-lg border border-slate-700" alt="تحميل جسم المستخدم">
-                                <span class="text-[10px] text-muted-color">تم تهيئة وحفظ الصورة محلياً بنجاح! ✔️</span>
+                            <input type="file" id="ob-photo-input" accept="image/*" onchange="handleBodyPhotoUpload(event)" class="text-xs text-muted-color file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-200 file:text-slate-800 dark:file:bg-slate-800 dark:file:text-orange-500 cursor-pointer">
+                            <div id="ob-photo-preview-container" class="hidden mt-2 flex items-center gap-3 sub-panel-bg p-2 rounded-xl border border-main-color">
+                                <img id="ob-photo-preview" class="w-16 h-16 object-cover rounded-lg border border-sub-color" alt="تحميل جسم المستخدم">
+                                <span class="text-[10px] text-muted-color font-bold">تم تهيئة وحفظ الصورة محلياً بنجاح! ✔️</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="flex flex-col gap-1 text-main-color">
-                        <label class="text-xs text-slate-300 font-bold flex items-center gap-1.5">
-                            <i data-lucide="edit-3" class="w-4 h-4 text-orange-400 theme-primary-text"></i>
+                        <label class="text-xs text-main-color font-bold flex items-center gap-1.5">
+                            <i data-lucide="edit-3" class="w-4 h-4 theme-primary-text"></i>
                             ملاحظات صحية أو بدنية إضافية (اختياري)
                         </label>
                         <textarea id="ob-health-notes" rows="2" placeholder="مثال: عندي خشونة بسيطة بالركبة، أو أريد التركيز على زوايا محددة..." class="input-style border rounded-xl p-2.5 text-xs focus:outline-none resize-none"></textarea>
@@ -329,16 +380,16 @@
                 </div>
 
                 <!-- Navigation Action Row -->
-                <div class="flex justify-between items-center border-t border-slate-800 pt-4 mt-2">
-                    <button type="button" id="ob-prev-btn" onclick="prevOnboardingStep()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-xs font-bold px-4 py-2.5 rounded-xl border border-slate-700 text-slate-300 flex items-center gap-1.5 transition-all">
+                <div class="flex justify-between items-center border-t border-main-color pt-4 mt-2">
+                    <button type="button" id="ob-prev-btn" onclick="prevOnboardingStep()" class="sub-panel-bg hover:panel-bg-hover active:scale-95 text-xs font-bold px-4 py-2.5 rounded-xl border border-main-color text-main-color flex items-center gap-1.5 transition-all">
                         <i data-lucide="arrow-right" class="w-4 h-4"></i> السابق
                     </button>
                     
-                    <button type="button" id="ob-next-btn" onclick="nextOnboardingStep()" class="bg-orange-500 hover:bg-orange-600 active:scale-95 text-slate-950 text-xs font-black px-5 py-2.5 rounded-xl flex items-center gap-1.5 mr-auto theme-primary-bg transition-all">
+                    <button type="button" id="ob-next-btn" onclick="nextOnboardingStep()" class="premium-gradient-btn font-black px-5 py-2.5 rounded-xl flex items-center gap-1.5 mr-auto transition-all text-xs">
                         التالي <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     </button>
                     
-                    <button type="submit" id="ob-submit-btn" class="hidden premium-gradient-btn active:scale-95 text-slate-950 text-xs font-black px-6 py-2.5 rounded-xl flex items-center gap-1.5 mr-auto shadow-lg shadow-orange-500/20 theme-primary-bg transition-all">
+                    <button type="submit" id="ob-submit-btn" class="hidden premium-gradient-btn font-black px-6 py-2.5 rounded-xl flex items-center gap-1.5 mr-auto shadow-lg transition-all text-xs">
                         توليد البرنامج التلقائي الذكي ✨ <i data-lucide="check" class="w-4 h-4"></i>
                     </button>
                 </div>
@@ -350,11 +401,11 @@
     <header class="panel-bg border-b border-main-color sticky top-0 z-40 px-4 py-3 md:px-8 flex items-center justify-between gap-4 backdrop-blur-md bg-opacity-80">
         <!-- Brand Logo & Title -->
         <div class="flex items-center gap-3 shrink-0">
-            <div class="bg-gradient-to-tr from-orange-500 to-amber-500 p-2 rounded-xl shadow-lg shadow-orange-500/10 theme-primary-bg flex items-center justify-center w-10 h-10">
+            <div class="p-2 rounded-xl shadow-lg theme-primary-bg flex items-center justify-center w-10 h-10">
                 <img src="favicon.png" alt="Logo" class="w-6 h-6 object-contain" onerror="this.onerror=null; this.src='https://placehold.co/100x100/f97316/ffffff?text=M'">
             </div>
             <div>
-                <h1 class="font-black text-base sm:text-lg md:text-xl bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent theme-primary-text leading-none">MUSCLEUP</h1>
+                <h1 class="font-black text-base sm:text-lg md:text-xl theme-gradient-text leading-none">MUSCLEUP</h1>
                 <p class="text-[9px] sm:text-[10px] text-muted-color font-semibold mt-1">الطيبات والتدريب الذكي</p>
             </div>
         </div>
@@ -363,21 +414,21 @@
         <div class="flex items-center gap-1.5 sm:gap-2">
             <!-- Streak Badge -->
             <div class="panel-bg px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-xl border border-main-color flex items-center gap-1 sm:gap-1.5 shadow-sm text-xs" title="سلسلة الالتزام">
-                <i data-lucide="flame" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-500 animate-bounce"></i>
-                <span id="streak-count" class="font-extrabold text-orange-400">0</span>
+                <i data-lucide="flame" class="w-3.5 h-3.5 sm:w-4 sm:h-4 theme-primary-text animate-bounce"></i>
+                <span id="streak-count" class="font-extrabold theme-primary-text">0</span>
             </div>
 
             <!-- Workouts Trophy Badge -->
             <div class="panel-bg px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-xl border border-main-color flex items-center gap-1 sm:gap-1.5 shadow-sm text-xs hidden xs:flex" title="التمارين المنجزة">
                 <i data-lucide="trophy" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-500"></i>
-                <span id="total-workouts" class="font-extrabold text-yellow-400">0</span>
+                <span id="total-workouts" class="font-extrabold text-yellow-500">0</span>
             </div>
 
             <!-- Vertical Divider -->
-            <div class="h-6 w-[1px] bg-slate-800 dark:bg-slate-700 mx-0.5 sm:mx-1"></div>
+            <div class="h-6 w-[1px] bg-slate-300 dark:bg-slate-700 mx-0.5 sm:mx-1"></div>
 
             <!-- Light/Dark Mode Switcher -->
-            <button onclick="toggleLightDarkMode()" class="panel-bg hover:panel-bg-hover active:scale-95 text-amber-500 p-2 rounded-xl border border-main-color flex items-center justify-center transition-all duration-300 shadow-sm" id="theme-toggle-btn" title="تغيير المظهر">
+            <button onclick="toggleLightDarkMode()" class="panel-bg hover:panel-bg-hover active:scale-95 theme-primary-text p-2 rounded-xl border border-main-color flex items-center justify-center transition-all duration-300 shadow-sm" id="theme-toggle-btn" title="تغيير المظهر">
                 <i data-lucide="sun" id="theme-icon" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i>
             </button>
 
@@ -387,29 +438,29 @@
             </button>
 
             <!-- Profile / Metrics Button -->
-            <button onclick="openProfileEdit()" class="panel-bg hover:panel-bg-hover active:scale-95 text-orange-500 theme-primary-text p-2 rounded-xl border border-main-color flex items-center justify-center transition-all duration-300 shadow-sm" title="تعديل القياسات">
+            <button onclick="openProfileEdit()" class="panel-bg hover:panel-bg-hover active:scale-95 theme-primary-text p-2 rounded-xl border border-main-color flex items-center justify-center transition-all duration-300 shadow-sm" title="تعديل القياسات">
                 <i data-lucide="user" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i>
             </button>
         </div>
     </header>
 
-    <!-- SETTINGS PANEL POPUP (With Glassmorphism) -->
+    <!-- SETTINGS PANEL POPUP -->
     <div id="settings-overlay" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto hidden transition-all duration-500">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-md p-6 flex flex-col gap-5 shadow-2xl text-slate-100 relative">
-            <button onclick="closeSettingsModal()" class="absolute top-4 left-4 text-slate-400 hover:text-slate-100 active:scale-90 transition-all">
+        <div class="panel-bg border border-main-color rounded-3xl w-full max-w-md p-6 flex flex-col gap-5 shadow-2xl text-main-color relative">
+            <button onclick="closeSettingsModal()" class="absolute top-4 left-4 text-muted-color hover:text-main-color active:scale-90 transition-all">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
-                <i data-lucide="settings" class="w-5 h-5 text-orange-500 animate-spin theme-primary-text"></i>
+            <div class="flex items-center gap-2 border-b border-main-color pb-3">
+                <i data-lucide="settings" class="w-5 h-5 animate-spin theme-primary-text"></i>
                 <h3 class="font-extrabold text-base">إعدادات تطبيق MUSCLEUP</h3>
             </div>
 
             <!-- Custom Font Selector -->
             <div class="flex flex-col gap-2">
-                <label class="text-xs text-slate-300 font-bold flex items-center gap-1">
+                <label class="text-xs text-main-color font-bold flex items-center gap-1">
                     <i data-lucide="type" class="w-4 h-4"></i> تغيير خط التطبيق:
                 </label>
-                <select id="setting-font-select" onchange="changeAppFont(this.value)" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none">
+                <select id="setting-font-select" onchange="changeAppFont(this.value)" class="input-style border rounded-xl p-2.5 text-xs focus:outline-none">
                     <option value="Cairo">خط القاهرة (Cairo) - الافتراضي</option>
                     <option value="Almarai">خط المراعي (Almarai) - دائرى ناعم</option>
                     <option value="Tajawal">خط التجول (Tajawal) - حاد وأنيق</option>
@@ -418,28 +469,28 @@
 
             <!-- Custom Color Palettes -->
             <div class="flex flex-col gap-2">
-                <label class="text-xs text-slate-300 font-bold flex items-center gap-1">
+                <label class="text-xs text-main-color font-bold flex items-center gap-1">
                     <i data-lucide="palette" class="w-4 h-4"></i> اختيار اللون الرئيسي للتطبيق:
                 </label>
                 <div class="grid grid-cols-4 gap-2.5 mt-1">
-                    <button onclick="changeAppColor('#f97316', 'rgba(249, 115, 22, 0.15)', '#ea580c')" class="h-10 rounded-xl bg-orange-500 border border-slate-700 hover:scale-105 active:scale-95 transition-all flex items-center justify-center text-slate-950 font-black text-xs" title="برتقالي ناري">ناري</button>
-                    <button onclick="changeAppColor('#10b981', 'rgba(16, 185, 129, 0.15)', '#059669')" class="h-10 rounded-xl bg-emerald-500 border border-slate-700 hover:scale-105 active:scale-95 transition-all flex items-center justify-center text-slate-950 font-black text-xs" title="أخضر زمردي">زمردي</button>
-                    <button onclick="changeAppColor('#3b82f6', 'rgba(59, 130, 246, 0.15)', '#2563eb')" class="h-10 rounded-xl bg-blue-500 border border-slate-700 hover:scale-105 active:scale-95 transition-all flex items-center justify-center text-slate-950 font-black text-xs" title="أزرق رياضي">أزرق</button>
-                    <button onclick="changeAppColor('#a855f7', 'rgba(168, 85, 247, 0.15)', '#9333ea')" class="h-10 rounded-xl bg-purple-500 border border-slate-700 hover:scale-105 active:scale-95 transition-all flex items-center justify-center text-slate-950 font-black text-xs" title="بنفسجي ملكي">بنفسجي</button>
+                    <button onclick="changeAppColor('#f97316', 'rgba(249, 115, 22, 0.15)', '#ea580c')" class="h-10 rounded-xl bg-orange-500 border border-slate-700 hover:scale-105 active:scale-95 transition-all flex items-center justify-center text-white font-black text-xs" title="برتقالي ناري">ناري</button>
+                    <button onclick="changeAppColor('#10b981', 'rgba(16, 185, 129, 0.15)', '#059669')" class="h-10 rounded-xl bg-emerald-500 border border-slate-700 hover:scale-105 active:scale-95 transition-all flex items-center justify-center text-white font-black text-xs" title="أخضر زمردي">زمردي</button>
+                    <button onclick="changeAppColor('#3b82f6', 'rgba(59, 130, 246, 0.15)', '#2563eb')" class="h-10 rounded-xl bg-blue-500 border border-slate-700 hover:scale-105 active:scale-95 transition-all flex items-center justify-center text-white font-black text-xs" title="أزرق رياضي">أزرق</button>
+                    <button onclick="changeAppColor('#a855f7', 'rgba(168, 85, 247, 0.15)', '#9333ea')" class="h-10 rounded-xl bg-purple-500 border border-slate-700 hover:scale-105 active:scale-95 transition-all flex items-center justify-center text-white font-black text-xs" title="بنفسجي ملكي">بنفسجي</button>
                 </div>
             </div>
 
-            <div class="flex flex-col gap-2.5 border-t border-slate-800 pt-3">
-                <h4 class="text-xs font-bold text-slate-300 flex items-center gap-1">
+            <div class="flex flex-col gap-2.5 border-t border-main-color pt-3">
+                <h4 class="text-xs font-bold text-main-color flex items-center gap-1">
                     <i data-lucide="bell" class="w-4 h-4"></i> إعدادات التنبيه السريع:
                 </h4>
-                <div class="bg-slate-800 p-3 rounded-xl border border-slate-850 flex items-center justify-between">
-                    <span class="text-[11px] text-slate-400">تفعيل جرس الإشعار الصوتي</span>
-                    <input type="checkbox" id="setting-notify-sound" checked class="w-4 h-4 accent-orange-500">
+                <div class="sub-panel-bg p-3 rounded-xl border border-main-color flex items-center justify-between">
+                    <span class="text-[11px] text-muted-color font-bold">تفعيل جرس الإشعار الصوتي</span>
+                    <input type="checkbox" id="setting-notify-sound" checked class="w-4 h-4 accent-orange-500 theme-primary-bg">
                 </div>
             </div>
 
-            <button onclick="closeSettingsModal()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-100 font-bold p-2.5 rounded-xl text-xs transition duration-200 mt-2">
+            <button onclick="closeSettingsModal()" class="sub-panel-bg hover:panel-bg-hover active:scale-95 border border-main-color text-main-color font-bold p-2.5 rounded-xl text-xs transition duration-200 mt-2">
                 حفظ وإغلاق
             </button>
         </div>
@@ -450,27 +501,27 @@
         <!-- DESKTOP SIDEBAR NAVIGATION -->
         <aside class="hidden md:flex flex-col w-64 panel-bg border-l border-main-color p-4 gap-2">
             <nav class="flex flex-col gap-1.5" id="desktop-nav-container">
-                <button onclick="switchTab('dashboard')" class="tab-btn active-tab flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-500" id="tab-dashboard-btn">
+                <button onclick="switchTab('dashboard')" class="tab-btn active-tab flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover" id="tab-dashboard-btn">
                     <i data-lucide="layout-dashboard" class="w-4.5 h-4.5"></i>
                     <span>لوحة التحكم</span>
                 </button>
-                <button onclick="switchTab('workout-plan')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-500" id="tab-workout-plan-btn">
+                <button onclick="switchTab('workout-plan')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover" id="tab-workout-plan-btn">
                     <i data-lucide="calendar" class="w-4.5 h-4.5"></i>
                     <span>البرنامج الأسبوعي</span>
                 </button>
-                <button onclick="switchTab('diet-tayyebat')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-500" id="tab-diet-tayyebat-btn">
+                <button onclick="switchTab('diet-tayyebat')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover" id="tab-diet-tayyebat-btn">
                     <i data-lucide="apple" class="w-4.5 h-4.5 text-amber-550"></i>
                     <span>نظام الطيبات المطور</span>
                 </button>
-                <button onclick="switchTab('active-workout')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-500" id="tab-active-workout-btn">
+                <button onclick="switchTab('active-workout')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover" id="tab-active-workout-btn">
                     <i data-lucide="timer" class="w-4.5 h-4.5"></i>
                     <span>المساعد التفاعلي</span>
                 </button>
-                <button onclick="switchTab('history')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-500" id="tab-history-btn">
+                <button onclick="switchTab('history')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover" id="tab-history-btn">
                     <i data-lucide="history" class="w-4.5 h-4.5"></i>
                     <span>سجل التمارين</span>
                 </button>
-                <button onclick="switchTab('help')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover hover:text-orange-500" id="tab-help-btn">
+                <button onclick="switchTab('help')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-muted-color hover:panel-bg-hover" id="tab-help-btn">
                     <i data-lucide="help-circle" class="w-4.5 h-4.5 text-blue-400"></i>
                     <span>صفحة المساعدة</span>
                 </button>
@@ -483,12 +534,12 @@
             <!-- TAB 1: DASHBOARD -->
             <section id="tab-dashboard" class="tab-content flex flex-col gap-6 animate-fade-in-up">
                 <!-- Welcome Banner -->
-                <div class="bg-gradient-to-l from-orange-950/25 via-slate-900 to-slate-900 border border-main-color p-6 md:p-8 rounded-3xl relative overflow-hidden" id="dash-banner">
-                    <div class="absolute -left-10 -bottom-10 opacity-5 text-orange-500 scale-150">
+                <div class="theme-primary-glow-bg border border-main-color p-6 md:p-8 rounded-3xl relative overflow-hidden" id="dash-banner">
+                    <div class="absolute -left-10 -bottom-10 opacity-10 theme-primary-text scale-150">
                         <i data-lucide="dumbbell" class="w-48 h-48"></i>
                     </div>
-                    <div class="max-w-2xl">
-                        <span id="welcome-badge" class="bg-orange-500/10 text-orange-400 text-xs font-bold px-3 py-1 rounded-full border border-orange-500/20 theme-primary-glow-bg theme-primary-text">مرحباً بك يا بطل! 👋</span>
+                    <div class="max-w-2xl relative z-10">
+                        <span id="welcome-badge" class="theme-primary-glow-bg theme-primary-text text-xs font-bold px-3 py-1 rounded-full border theme-primary-border">مرحباً بك يا بطل! 👋</span>
                         <h2 class="text-2xl md:text-3xl font-black mt-3 text-main-color leading-tight">برنامج اليوم المطور وغذاء الطيبات بانتظارك!</h2>
                         <p class="text-xs md:text-sm text-muted-color mt-3 leading-relaxed font-semibold">يقوم محرك التطبيق الرياضي بتنسيق الجولات والراحة حركياً بناءً على مؤشر كتلة جسمك الحالي لضمان أفضل حماية واستشفاء عضلي مخصص [16].</p>
                     </div>
@@ -496,13 +547,13 @@
 
                 <!-- TODAY'S EXERCISE WORKOUT DISPLAY -->
                 <div class="panel-bg border border-main-color p-4 sm:p-6 rounded-3xl flex flex-col gap-4 sm:gap-5 relative animate-pulse-glow" id="dash-today-panel">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-main-color/30 pb-4">
-                        <div class="text-orange-500 bg-orange-500/10 px-3.5 py-1.5 rounded-xl border border-orange-500/20 flex items-center gap-1.5 text-xs font-bold theme-primary-glow-bg theme-primary-text theme-primary-border w-fit">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-main-color pb-4">
+                        <div class="theme-primary-glow-bg theme-primary-text theme-primary-border px-3.5 py-1.5 rounded-xl border flex items-center gap-1.5 text-xs font-bold w-fit">
                             <i data-lucide="unlock" class="w-4 h-4"></i>
                             <span>تمرين اليوم النشط</span>
                         </div>
                         <h3 class="font-extrabold text-sm md:text-base text-muted-color flex items-center gap-2">
-                            <i data-lucide="flame" class="w-5 h-5 text-orange-500"></i>
+                            <i data-lucide="flame" class="w-5 h-5 theme-primary-text"></i>
                             تمرين اليوم النشط: <span id="dash-today-name" class="text-main-color font-black">جاري التحميل...</span>
                         </h3>
                     </div>
@@ -535,7 +586,7 @@
                                     <span class="sub-panel-bg px-2 py-1 rounded border border-main-color" id="prof-spec-age">السن: -</span>
                                     <span class="sub-panel-bg px-2 py-1 rounded border border-main-color" id="prof-spec-weight">الوزن: -</span>
                                     <span class="sub-panel-bg px-2 py-1 rounded border border-main-color" id="prof-spec-body">الجسم: -</span>
-                                    <span class="sub-panel-bg px-2 py-1 rounded border border-main-color text-orange-400 theme-primary-text" id="prof-spec-bmi">BMI: -</span>
+                                    <span class="sub-panel-bg px-2 py-1 rounded border border-main-color theme-primary-text" id="prof-spec-bmi">BMI: -</span>
                                 </div>
                             </div>
                         </div>
@@ -544,7 +595,7 @@
                         </div>
                     </div>
                     
-                    <!-- Rule-Based Advisor (Dynamic local calculation) -->
+                    <!-- Rule-Based Advisor -->
                     <div class="panel-bg border border-main-color p-6 rounded-3xl md:col-span-2 flex flex-col gap-3 relative hover-lift">
                         <div class="flex items-center gap-1.5 text-xs font-bold theme-primary-text">
                             <i data-lucide="sparkles" class="w-4 h-4"></i>
@@ -559,7 +610,7 @@
                 <!-- DAILY NOTIFICATION SETTINGS PANEL -->
                 <div class="panel-bg border border-main-color p-6 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
-                        <div class="p-3 bg-blue-500/10 rounded-2xl text-blue-400">
+                        <div class="p-3 bg-blue-500/10 rounded-2xl text-blue-500">
                             <i data-lucide="bell-ring" class="w-6 h-6"></i>
                         </div>
                         <div>
@@ -569,10 +620,10 @@
                     </div>
                     <div class="flex flex-wrap items-center gap-3 sub-panel-bg p-3.5 rounded-2xl border border-main-color">
                         <div class="flex items-center gap-1.5">
-                            <input type="checkbox" id="reminder-toggle" onchange="toggleNotifications(event)" class="w-4 h-4 accent-orange-500 theme-primary-bg cursor-pointer">
+                            <input type="checkbox" id="reminder-toggle" onchange="toggleNotifications(event)" class="w-4 h-4 theme-primary-text cursor-pointer">
                             <label for="reminder-toggle" class="text-xs text-main-color font-bold cursor-pointer">تفعيل التذكير</label>
                         </div>
-                        <div class="h-6 w-[1px] bg-slate-700 hidden sm:block"></div>
+                        <div class="h-6 w-[1px] bg-slate-300 dark:bg-slate-700 hidden sm:block"></div>
                         <div class="flex items-center gap-1.5">
                             <label class="text-[10px] text-muted-color font-bold">تحديد الوقت:</label>
                             <input type="time" id="reminder-time-input" onchange="updateReminderTime()" class="input-style border text-xs p-2 rounded-xl focus:outline-none">
@@ -583,7 +634,7 @@
                 <!-- Fast Stats Row -->
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="panel-bg border border-main-color p-5 rounded-3xl flex items-center gap-4 hover-lift">
-                        <div class="p-3 bg-orange-500/10 rounded-2xl theme-primary-text">
+                        <div class="p-3 theme-primary-glow-bg rounded-2xl theme-primary-text">
                             <i data-lucide="activity" class="w-6 h-6"></i>
                         </div>
                         <div>
@@ -592,7 +643,7 @@
                         </div>
                     </div>
                     <div class="panel-bg border border-main-color p-5 rounded-3xl flex items-center gap-4 hover-lift">
-                        <div class="p-3 bg-rose-500/10 rounded-2xl text-rose-400">
+                        <div class="p-3 bg-rose-500/10 rounded-2xl text-rose-500">
                             <i data-lucide="zap" class="w-6 h-6"></i>
                         </div>
                         <div>
@@ -601,7 +652,7 @@
                         </div>
                     </div>
                     <div class="panel-bg border border-main-color p-5 rounded-3xl flex items-center gap-4 hover-lift">
-                        <div class="p-3 bg-blue-500/10 rounded-2xl text-blue-400">
+                        <div class="p-3 bg-blue-500/10 rounded-2xl text-blue-500">
                             <i data-lucide="clock" class="w-6 h-6"></i>
                         </div>
                         <div>
@@ -610,7 +661,7 @@
                         </div>
                     </div>
                     <div class="panel-bg border border-main-color p-5 rounded-3xl flex items-center gap-4 hover-lift">
-                        <div class="p-3 bg-pink-500/10 rounded-2xl text-pink-400">
+                        <div class="p-3 bg-pink-500/10 rounded-2xl text-pink-500">
                             <i data-lucide="calendar" class="w-6 h-6"></i>
                         </div>
                         <div>
@@ -635,11 +686,10 @@
                 </div>
             </section>
 
-            <!-- -->
             <!-- TAB 2: WEEKLY COMPREHENSIVE WORKOUT PLAN (7 DAYS) -->
             <section id="tab-workout-plan" class="tab-content hidden flex flex-col gap-6 animate-fade-in-up">
                 <div>
-                    <h2 class="text-2xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent theme-primary-text">البرنامج الرياضي المنزلي الشامل (7 أيام)</h2>
+                    <h2 class="text-2xl font-black theme-gradient-text">البرنامج الرياضي المنزلي الشامل (7 أيام)</h2>
                     <p class="text-xs md:text-sm text-muted-color mt-2 font-medium leading-relaxed">يتم إغلاق التمارين السابقة والمستقبلية لضمان التزامك بالجدول المخصص لليوم وحمايتك من الإرهاق العضلي.</p>
                 </div>
 
@@ -656,12 +706,12 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- مسموحات الطيبات -->
-                    <div class="bg-emerald-950/20 border border-emerald-500/20 p-6 rounded-3xl flex flex-col gap-3 hover-lift">
-                        <div class="flex items-center gap-2 text-emerald-400 font-bold border-b border-emerald-500/20 pb-2">
+                    <div class="tayyebat-allow-card border p-6 rounded-3xl flex flex-col gap-3 hover-lift transition-all">
+                        <div class="flex items-center gap-2 card-title font-bold border-b pb-2" style="border-color: var(--tayyebat-allow-border)">
                             <i data-lucide="check-circle" class="w-5 h-5"></i>
                             <span>المسموحات المعتمدة</span>
                         </div>
-                        <ul class="text-xs md:text-sm text-slate-300 flex flex-col gap-2.5 list-none font-semibold leading-relaxed">
+                        <ul class="text-xs md:text-sm flex flex-col gap-2.5 list-none font-semibold leading-relaxed">
                             <li>🌾 <strong>خبز دقيق الحبة الكاملة والتوست:</strong> بشرط تحميصه جيداً قبل الأكل حتى تمام جفافه لتغيير خصائص الجلوتين.</li>
                             <li>🍚 <strong>الأرز الأبيض والبسمتي:</strong> مطبوخ جيداً وبأي سمن طبيعي بلدي أو زبدة طبيعية أو زيت زيتون.</li>
                             <li>🥔 <strong>البطاطس والبطاطا الحلوة:</strong> مسلوقة أو مطبوخة أو محمرة (ممنوع تماماً بقشرها).</li>
@@ -674,12 +724,12 @@
                     </div>
 
                     <!-- ممنوعات الطيبات -->
-                    <div class="bg-rose-950/20 border border-rose-500/20 p-6 rounded-3xl flex flex-col gap-3 hover-lift">
-                        <div class="flex items-center gap-2 text-rose-400 font-bold border-b border-rose-500/20 pb-2">
+                    <div class="tayyebat-deny-card border p-6 rounded-3xl flex flex-col gap-3 hover-lift transition-all">
+                        <div class="flex items-center gap-2 card-title font-bold border-b pb-2" style="border-color: var(--tayyebat-deny-border)">
                             <i data-lucide="x-circle" class="w-5 h-5"></i>
                             <span>الممنوعات والتحذيرات الصارمة</span>
                         </div>
-                        <ul class="text-xs md:text-sm text-slate-300 flex flex-col gap-2.5 list-none font-semibold leading-relaxed">
+                        <ul class="text-xs md:text-sm flex flex-col gap-2.5 list-none font-semibold leading-relaxed">
                             <li>🥛 <strong>الحليب ومنتجات الألبان:</strong> ممنوع تماماً اللبن، الأجبان بكل أنواعها، الزبادي، والقشطة.</li>
                             <li>🐓 <strong>الطيور والدواجن:</strong> ممنوع الدجاج، البط، الأوز، والرومي (ما عدا الحمام).</li>
                             <li>🫘 <strong>البقوليات بالكامل:</strong> يمنع الفول، العدس، الحمص، اللوبيا، الفاصوليا، والترمس.</li>
@@ -691,7 +741,7 @@
                     </div>
 
                     <!-- وجبات اليوم والمدير التفاعلي للوجبات -->
-                    <div class="panel-bg border border-main-color p-6 rounded-3xl flex flex-col gap-4">
+                    <div class="panel-bg border border-main-color p-6 rounded-3xl flex flex-col gap-4 hover-lift">
                         <h3 class="font-bold text-sm md:text-base text-main-color flex items-center gap-2">
                             <i data-lucide="utensils" class="w-5 h-5 text-amber-500"></i>
                             سجل وجبتك اليوم للتحقق
@@ -710,7 +760,7 @@
                                 <label class="text-[10px] text-muted-color font-bold">ماذا أكلت اليوم؟ (اكتب الوجبة بالتفصيل)</label>
                                 <textarea id="diet-meal-desc" required rows="3" placeholder="مثال: أرز وبطاطس مطبوخة بسمن بلدي ولحمة مسلوقة وتوست حبة كاملة محمص..." class="input-style border rounded-xl p-3 text-xs focus:outline-none resize-none"></textarea>
                             </div>
-                            <button type="submit" class="premium-gradient-btn active:scale-95 text-slate-950 font-bold py-3 px-4 rounded-xl text-xs md:text-sm flex items-center justify-center gap-1.5 shadow-lg transition-all">
+                            <button type="submit" class="premium-gradient-btn font-bold py-3 px-4 rounded-xl text-xs md:text-sm flex items-center justify-center gap-1.5 shadow-lg transition-all">
                                 <i data-lucide="plus" class="w-4 h-4"></i> فحص وتسجيل الوجبة
                             </button>
                         </form>
@@ -718,25 +768,24 @@
                         <div class="border-t border-main-color pt-3">
                             <h4 class="text-[11px] font-bold text-muted-color mb-2">وجبات اليوم المسجلة:</h4>
                             <div id="diet-log-list" class="flex flex-col gap-2 max-h-[160px] overflow-y-auto">
-                                <p class="text-[10px] text-slate-500 text-center py-2 font-semibold">لم تسجل أي وجبات اليوم بعد.</p>
+                                <p class="text-[10px] text-muted-color text-center py-2 font-semibold">لم تسجل أي وجبات اليوم بعد.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- -->
             <!-- TAB 4: ACTIVE WORKOUT COMPANION (مساعد التمرين التفاعلي النشط) -->
             <section id="tab-active-workout" class="tab-content hidden flex flex-col gap-6 animate-fade-in-up">
                 <div class="max-w-3xl mx-auto w-full">
                     <!-- Setup Screen -->
-                    <div id="companion-setup" class="panel-bg border border-main-color p-8 rounded-3xl text-center flex flex-col items-center justify-center gap-4 shadow-xl">
-                        <div class="p-4 bg-slate-800 rounded-full text-orange-400 animate-pulse">
-                            <i data-lucide="dumbbell" class="w-12 h-12 theme-primary-text"></i>
+                    <div id="companion-setup" class="sub-panel-bg border border-main-color p-8 rounded-3xl text-center flex flex-col items-center justify-center gap-4 shadow-xl">
+                        <div class="p-4 bg-slate-200 dark:bg-slate-800 rounded-full theme-primary-text animate-pulse">
+                            <i data-lucide="dumbbell" class="w-12 h-12"></i>
                         </div>
                         <h2 class="text-xl font-bold text-main-color">لم تقم بتحديد تمرين للبدء به</h2>
                         <p class="text-xs text-muted-color max-w-md leading-relaxed font-semibold">اذهب إلى تبويب **البرنامج الأسبوعي** وافتح تمرين اليوم الحالي ثم اضغط على زر "ابدأ التمارين الآن 🚀" لتشغيل المساعد الذكي التفاعلي.</p>
-                        <button onclick="switchTab('workout-plan')" class="premium-gradient-btn active:scale-95 text-slate-950 font-extrabold px-6 py-3.5 rounded-xl text-xs md:text-sm flex items-center gap-2 mt-2 shadow-lg shadow-orange-500/10 transition-all">
+                        <button onclick="switchTab('workout-plan')" class="premium-gradient-btn font-extrabold px-6 py-3.5 rounded-xl text-xs md:text-sm flex items-center gap-2 mt-2 shadow-lg transition-all">
                             اذهب للبرنامج الأسبوعي <i data-lucide="calendar" class="w-4.5 h-4.5"></i>
                         </button>
                     </div>
@@ -745,17 +794,17 @@
                     <div id="companion-active-panel" class="hidden flex flex-col gap-6">
                         <div class="panel-bg border border-main-color p-5 rounded-2xl flex items-center justify-between shadow-xl">
                             <div>
-                                <span id="companion-day-badge" class="bg-orange-500/10 text-orange-400 text-[10px] font-bold px-3 py-1 rounded-full border border-orange-500/20 theme-primary-glow-bg theme-primary-text theme-primary-border">اليوم</span>
+                                <span id="companion-day-badge" class="theme-primary-glow-bg theme-primary-text text-[10px] font-bold px-3 py-1 rounded-full border theme-primary-border">اليوم</span>
                                 <h3 id="companion-day-title" class="text-md md:text-lg font-bold text-main-color mt-1.5 leading-snug">تمارين الصدر والترايسبس العريض</h3>
                             </div>
-                            <button onclick="quitActiveWorkout()" class="bg-rose-500/10 hover:bg-rose-500 hover:text-white active:scale-95 border border-rose-500/20 text-rose-400 text-xs font-bold px-4 py-2.5 rounded-xl transition-all">
+                            <button onclick="quitActiveWorkout()" class="bg-rose-500/10 hover:bg-rose-500 hover:text-white active:scale-95 border border-rose-500/20 text-rose-500 text-xs font-bold px-4 py-2.5 rounded-xl transition-all">
                                 إنهاء التمرين والخروج ❌
                             </button>
                         </div>
 
                         <!-- Main Exercise Card -->
                         <div class="panel-bg border border-main-color p-6 md:p-8 rounded-3xl flex flex-col gap-6 relative overflow-hidden shadow-2xl">
-                            <div class="absolute -left-10 -bottom-10 opacity-5 text-orange-500 scale-[2]">
+                            <div class="absolute -left-10 -bottom-10 opacity-5 theme-primary-text scale-[2]">
                                 <i data-lucide="activity" class="w-48 h-48"></i>
                             </div>
 
@@ -766,13 +815,13 @@
                                 </div>
                                 <div class="text-right">
                                     <p class="text-[10px] text-muted-color font-bold">المجموعات الموصى بها لمستواك</p>
-                                    <p id="companion-exec-sets-info" class="text-sm md:text-base font-black text-orange-400 mt-1 theme-primary-text">3 جولات × 12 عدة</p>
+                                    <p id="companion-exec-sets-info" class="text-sm md:text-base font-black theme-primary-text mt-1">3 جولات × 12 عدة</p>
                                 </div>
                             </div>
 
                             <!-- "Baladi" Explanation Box -->
                             <div class="sub-panel-bg border border-main-color p-4 rounded-2xl flex flex-col gap-2">
-                                <span class="text-[10px] text-orange-500 theme-primary-text font-bold flex items-center gap-1">
+                                <span class="text-[10px] theme-primary-text font-bold flex items-center gap-1">
                                     <i data-lucide="speech" class="w-4 h-4"></i> الشرح بالبلدي (اعمل إيه بالظبط؟):
                                 </span>
                                 <p id="companion-exec-explanation" class="text-xs md:text-sm text-main-color leading-relaxed font-semibold">
@@ -781,39 +830,39 @@
                             </div>
 
                             <!-- LIVE TRACKING STATE PANEL -->
-                            <div id="live-state-wrapper" class="bg-slate-950/40 border border-main-color p-6 rounded-2xl flex flex-col items-center justify-center text-center gap-4">
+                            <div id="live-state-wrapper" class="bg-black/5 dark:bg-black/40 border border-main-color p-6 rounded-2xl flex flex-col items-center justify-center text-center gap-4">
                                 
                                 <!-- Normal Reps Section -->
                                 <div id="state-normal-exercise" class="flex flex-col items-center gap-2">
                                     <span class="text-[11px] text-muted-color font-bold tracking-wider uppercase">الجولة الحالية</span>
                                     <div class="flex items-baseline gap-2">
                                         <span id="current-set-count" class="text-6xl font-black theme-primary-text">1</span>
-                                        <span class="text-slate-500 text-sm">من</span>
+                                        <span class="text-muted-color text-sm">من</span>
                                         <span id="total-set-count" class="text-xl font-bold text-muted-color">3</span>
                                     </div>
                                     <p id="current-rep-target-desc" class="text-xs md:text-sm text-muted-color mt-1 font-semibold">الهدف: العب <strong class="text-main-color">12 عدة</strong> ثم خذ استراحة</p>
 
-                                    <button onclick="unlockAudioContext(); completeCurrentSet()" class="premium-gradient-btn active:scale-95 text-slate-950 font-black px-10 py-4 rounded-2xl text-xs md:text-sm flex items-center gap-2 shadow-lg mt-4 transition-all">
+                                    <button onclick="unlockAudioContext(); completeCurrentSet()" class="premium-gradient-btn font-black px-10 py-4 rounded-2xl text-xs md:text-sm flex items-center gap-2 shadow-lg mt-4 transition-all">
                                         أكملت هذه المجموعة بنجاح! ✔️
                                     </button>
                                 </div>
 
                                 <!-- Active Timer Execution Section -->
                                 <div id="state-execution-timer" class="hidden flex flex-col items-center gap-3 w-full animate-fade-in-up">
-                                    <span class="text-[11px] text-orange-400 font-bold tracking-wider uppercase flex items-center gap-1 animate-pulse">
+                                    <span class="text-[11px] theme-primary-text font-bold tracking-wider uppercase flex items-center gap-1 animate-pulse">
                                         <i data-lucide="timer" class="w-4 h-4"></i> حركة تعتمد على الوقت (الثواني)
                                     </span>
-                                    <div class="relative w-36 h-36 flex items-center justify-center rounded-full bg-slate-900 border-2 border-orange-500">
+                                    <div class="relative w-36 h-36 flex items-center justify-center rounded-full bg-white dark:bg-slate-900 border-2 theme-primary-border">
                                         <div class="text-center">
-                                            <span id="exec-countdown" class="text-5xl font-black tabular-nums text-slate-50">30</span>
-                                            <span class="block text-[10px] text-slate-400 mt-1">ثانية متبقية</span>
+                                            <span id="exec-countdown" class="text-5xl font-black tabular-nums text-strong-color">30</span>
+                                            <span class="block text-[10px] text-muted-color mt-1">ثانية متبقية</span>
                                         </div>
                                     </div>
                                     <div class="flex gap-2.5 mt-2">
-                                        <button id="exec-timer-start-btn" onclick="unlockAudioContext(); startExecutionTimer()" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-95 text-slate-950 font-black px-6 py-3 rounded-xl text-xs flex items-center gap-1.5 transition-all theme-primary-bg">
+                                        <button id="exec-timer-start-btn" onclick="unlockAudioContext(); startExecutionTimer()" class="premium-gradient-btn font-black px-6 py-3 rounded-xl text-xs flex items-center gap-1.5 transition-all">
                                             ابدأ الحركة ▶️
                                         </button>
-                                        <button onclick="skipExecutionTimer()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 font-bold px-4 py-3 rounded-xl text-xs transition-all">
+                                        <button onclick="skipExecutionTimer()" class="sub-panel-bg hover:panel-bg-hover active:scale-95 text-main-color border border-main-color font-bold px-4 py-3 rounded-xl text-xs transition-all">
                                             تخطي الحركة ⏩
                                         </button>
                                     </div>
@@ -821,28 +870,28 @@
 
                                 <!-- REST TIMER MODE -->
                                 <div id="state-rest-timer" class="hidden flex flex-col items-center gap-3 animate-fade-in-up">
-                                    <span class="text-[11px] text-orange-400 font-bold tracking-wider uppercase flex items-center gap-1 animate-pulse">
+                                    <span class="text-[11px] theme-primary-text font-bold tracking-wider uppercase flex items-center gap-1 animate-pulse">
                                         <i data-lucide="hourglass" class="w-4 h-4"></i> وقت الراحة الاستشفائية
                                     </span>
-                                    <div class="relative w-36 h-36 flex items-center justify-center rounded-full bg-slate-900 border-2 border-orange-500/40">
+                                    <div class="relative w-36 h-36 flex items-center justify-center rounded-full bg-white dark:bg-slate-900 border-2 border-main-color">
                                         <div class="text-center">
-                                            <span id="rest-countdown" class="text-5xl font-black tabular-nums text-slate-50">30</span>
-                                            <span class="block text-[10px] text-slate-400 mt-1">ثانية متبقية</span>
+                                            <span id="rest-countdown" class="text-5xl font-black tabular-nums text-strong-color">30</span>
+                                            <span class="block text-[10px] text-muted-color mt-1">ثانية متبقية</span>
                                         </div>
                                     </div>
-                                    <p class="text-xs md:text-sm text-slate-400 leading-relaxed max-w-sm mt-1 font-semibold">خذ نفساً عميقاً، واشرب رشفة مياه سريعة. يرجى الاستعداد للجولة التالية.</p>
-                                    <button onclick="skipRest()" class="text-[10px] text-slate-500 hover:text-slate-300 active:scale-95 underline mt-2 transition-all">تخطي الاستراحة والبدء فوراً ⏩</button>
+                                    <p class="text-xs md:text-sm text-muted-color leading-relaxed max-w-sm mt-1 font-semibold">خذ نفساً عميقاً، واشرب رشفة مياه سريعة. يرجى الاستعداد للجولة التالية.</p>
+                                    <button onclick="skipRest()" class="text-[10px] text-muted-color hover:text-main-color active:scale-95 underline mt-2 transition-all">تخطي الاستراحة والبدء فوراً ⏩</button>
                                 </div>
                             </div>
 
                             <!-- Workout Progress Bar -->
                             <div class="flex flex-col gap-1.5 mt-2">
-                                <div class="flex justify-between text-[10px] text-slate-500 font-bold">
+                                <div class="flex justify-between text-[10px] text-muted-color font-bold">
                                     <span>تقدم تمرين اليوم</span>
                                     <span id="workout-progress-pct">0%</span>
                                 </div>
-                                <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
-                                    <div id="workout-progress-bar" class="h-full bg-orange-500 theme-primary-bg transition-all duration-300" style="width: 0%"></div>
+                                <div class="w-full h-2.5 sub-panel-bg rounded-full overflow-hidden border border-main-color">
+                                    <div id="workout-progress-bar" class="h-full theme-primary-bg transition-all duration-300" style="width: 0%"></div>
                                 </div>
                             </div>
                         </div>
@@ -850,49 +899,48 @@
 
                     <!-- SUCCESS GLORIOUS CONGRATS MODAL -->
                     <div id="companion-success-screen" class="hidden panel-bg border border-main-color p-8 rounded-3xl text-center flex flex-col items-center justify-center gap-5 animate-success shadow-2xl">
-                        <div class="p-5 bg-orange-500/20 text-orange-400 rounded-full scale-110 relative">
-                            <i data-lucide="award" class="w-14 h-14 animate-bounce text-orange-500 theme-primary-text"></i>
-                            <div class="absolute inset-0 rounded-full border-2 border-orange-500 animate-ping opacity-30"></div>
+                        <div class="p-5 theme-primary-glow-bg rounded-full scale-110 relative">
+                            <i data-lucide="award" class="w-14 h-14 animate-bounce theme-primary-text"></i>
+                            <div class="absolute inset-0 rounded-full border-2 theme-primary-border animate-ping opacity-30"></div>
                         </div>
                         <div>
-                            <h2 class="text-2xl md:text-3xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">وحش يا بطل! تم إنهاء التمرين بالكامل 🎉</h2>
+                            <h2 class="text-2xl md:text-3xl font-black theme-gradient-text">وحش يا بطل! تم إنهاء التمرين بالكامل 🎉</h2>
                             <p class="text-xs md:text-sm text-main-color max-w-md leading-relaxed mt-2 font-semibold">
                                 لقد أتممت جميع جولات تمرين اليوم بانتظام تام وذكاء بدني فائق. تم تسجيل البيانات وزيادة أيام التزامك بنجاح!
                             </p>
                         </div>
 
                         <!-- Workout Highlights card -->
-                        <div class="grid grid-cols-3 gap-3 w-full max-w-md bg-slate-950/40 p-4 rounded-2xl border border-main-color text-center text-xs mt-2">
-                            <div class="bg-slate-950 p-3 rounded-xl">
+                        <div class="grid grid-cols-3 gap-3 w-full max-w-md sub-panel-bg p-4 rounded-2xl border border-main-color text-center text-xs mt-2">
+                            <div class="panel-bg p-3 rounded-xl border border-main-color">
                                 <span class="text-[9px] text-muted-color block font-bold">السعرات المحروقة</span>
-                                <span id="success-stat-cals" class="font-extrabold text-orange-400 text-sm block mt-1">150 سعرة</span>
+                                <span id="success-stat-cals" class="font-extrabold text-orange-500 text-sm block mt-1">150 سعرة</span>
                             </div>
-                            <div class="bg-slate-950 p-3 rounded-xl">
+                            <div class="panel-bg p-3 rounded-xl border border-main-color">
                                 <span class="text-[9px] text-muted-color block font-bold">المدة المقدرة</span>
-                                <span id="success-stat-time" class="font-extrabold text-blue-400 text-sm block mt-1">20 دقيقة</span>
+                                <span id="success-stat-time" class="font-extrabold text-blue-500 text-sm block mt-1">20 دقيقة</span>
                             </div>
-                            <div class="bg-slate-950 p-3 rounded-xl">
-                                <span class="text-[9px] text-muted-color block font-bold">سلسلة الالتزام (Streak)</span>
-                                <span id="success-stat-streak" class="font-extrabold text-orange-400 text-sm block mt-1 theme-primary-text">+1 يوم</span>
+                            <div class="panel-bg p-3 rounded-xl border border-main-color">
+                                <span class="text-[9px] text-muted-color block font-bold">سلسلة الالتزام</span>
+                                <span id="success-stat-streak" class="font-extrabold theme-primary-text text-sm block mt-1">+1 يوم</span>
                             </div>
                         </div>
 
-                        <button onclick="dismissSuccessAndHome()" class="premium-gradient-btn active:scale-95 text-slate-950 font-extrabold px-8 py-3.5 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition-all shadow-lg shadow-orange-500/25">
+                        <button onclick="dismissSuccessAndHome()" class="premium-gradient-btn font-extrabold px-8 py-3.5 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition-all shadow-lg">
                             الرجوع إلى لوحة التحكم <i data-lucide="arrow-left" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>
             </section>
 
-            <!-- -->
             <!-- TAB 5: HISTORIES & COMPLETED LISTS -->
             <section id="tab-history" class="tab-content hidden flex flex-col gap-6 animate-fade-in-up">
                 <div class="flex justify-between items-center">
                     <div>
-                        <h2 class="text-2xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent theme-primary-text">سجل تمارينك المكتملة</h2>
+                        <h2 class="text-2xl font-black theme-gradient-text">سجل تمارينك المكتملة</h2>
                         <p class="text-xs md:text-sm text-muted-color">سجل تاريخي يعرض تفاصيل كافة التمارين السابقة التي قمت بإتمامها</p>
                     </div>
-                    <button onclick="clearHistory()" class="bg-rose-500/10 hover:bg-rose-500 hover:text-white active:scale-95 border border-rose-500/30 text-rose-400 text-[10px] md:text-xs font-semibold px-4 py-2 rounded-xl transition-all flex items-center gap-1.5">
+                    <button onclick="clearHistory()" class="bg-rose-500/10 hover:bg-rose-500 hover:text-white active:scale-95 border border-rose-500/30 text-rose-500 text-[10px] md:text-xs font-semibold px-4 py-2 rounded-xl transition-all flex items-center gap-1.5">
                         <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> مسح السجل
                     </button>
                 </div>
@@ -924,7 +972,7 @@
                     <div id="history-cards-container" class="md:hidden flex flex-col gap-3 p-3"></div>
 
                     <div id="history-empty" class="hidden p-10 text-center flex flex-col items-center justify-center gap-3 animate-fade-in-up">
-                        <div class="p-3 bg-slate-800 rounded-full text-slate-500">
+                        <div class="p-3 sub-panel-bg rounded-full text-muted-color border border-main-color">
                             <i data-lucide="folder-open" class="w-6 h-6"></i>
                         </div>
                         <div>
@@ -938,7 +986,7 @@
             <!-- TAB 6: HELP & INSTRUCTIONS PAGE -->
             <section id="tab-help" class="tab-content hidden flex flex-col gap-6 animate-fade-in-up">
                 <div>
-                    <h2 class="text-2xl font-black bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent theme-primary-text">صفحة مساعدة MUSCLEUP والتعليمات</h2>
+                    <h2 class="text-2xl font-black theme-gradient-text">صفحة مساعدة MUSCLEUP والتعليمات</h2>
                     <p class="text-xs md:text-sm text-muted-color mt-1">كل ما تحتاج لمعرفته حول تشغيل البرنامج، فلسفة الطيبات المطورة، ومشاكل الاستخدام.</p>
                 </div>
 
@@ -950,12 +998,12 @@
                         </h3>
                         <div class="flex flex-col gap-4 text-xs md:text-sm leading-relaxed text-main-color font-semibold">
                             <div>
-                                <h4 class="font-bold text-main-color text-xs md:text-sm">1. ما الفلسفة من دقيق الحبة الكاملة؟</h4>
-                                <p class="mt-1.5 text-muted-color">في هذه النسخة المطورة والمخصصة من نظام الطيبات بناءً على رغبتك، استبدلنا الدقيق الأبيض التقليدي بـ **دقيق الحبة الكاملة** المحمص جيداً، لتوفير كربوهيدرات معقدة والياف تدعم بناء العضلات وتحافظ على راحة القولون ومنع حدوث التهابات.</p>
+                                <h4 class="font-bold text-strong-color text-xs md:text-sm">1. ما الفلسفة من دقيق الحبة الكاملة؟</h4>
+                                <p class="mt-1.5 text-muted-color">في هذه النسخة المطورة والمخصصة من نظام الطيبات، استبدلنا الدقيق الأبيض بـ **دقيق الحبة الكاملة** المحمص جيداً، لتوفير كربوهيدرات معقدة تدعم بناء العضلات وتحافظ على راحة القولون.</p>
                             </div>
                             <div>
-                                <h4 class="font-bold text-main-color text-xs md:text-sm">2. لماذا تمنع الألبان والبقوليات والدجاج؟</h4>
-                                <p class="mt-1.5 text-muted-color">وفقاً لـ د. ضياء العوضي، تسبب الألبان والبقوليات والطيور والزيوت المهدرجة التهابات صامتة في جدار الأمعاء وتؤدي للانتفاخ وتمنع الامتصاص الكامل للبروتينات والعناصر الغذائية، وهو ما يضر استشفاءك العضلي.</p>
+                                <h4 class="font-bold text-strong-color text-xs md:text-sm">2. لماذا تمنع الألبان والبقوليات والدجاج؟</h4>
+                                <p class="mt-1.5 text-muted-color">تسبب الألبان والبقوليات والطيور والزيوت المهدرجة التهابات صامتة وتؤدي للانتفاخ وتمنع الامتصاص الكامل للبروتينات والعناصر الغذائية، وهو ما يضر استشفاءك العضلي.</p>
                             </div>
                         </div>
                     </div>
@@ -967,16 +1015,16 @@
                         </h3>
                         <div class="flex flex-col gap-4 text-xs md:text-sm leading-relaxed text-main-color font-semibold">
                             <div>
-                                <h4 class="font-bold text-main-color text-xs md:text-sm">1. هل جدول التمارين مقيد؟</h4>
-                                <p class="mt-1.5 text-muted-color">نعم! لحمايتك من التمزق العضلي، النظام يفتح لك تمرين "اليوم الحالي" فقط، ويغلق الأيام السابقة والمستقبلية. بمجرد إكمال تمرين اليوم، يتم إغلاقه أيضاً لمنع تكراره.</p>
+                                <h4 class="font-bold text-strong-color text-xs md:text-sm">1. هل جدول التمارين مقيد؟</h4>
+                                <p class="mt-1.5 text-muted-color">نعم! لحمايتك من التمزق العضلي، النظام يفتح لك تمرين "اليوم الحالي" فقط. بمجرد إكمال تمرين اليوم، يتم إغلاقه أيضاً لمنع تكراره.</p>
                             </div>
                             <div>
-                                <h4 class="font-bold text-main-color text-xs md:text-sm">2. كيف يعمل المساعد التفاعلي؟</h4>
-                                <p class="mt-1.5 text-muted-color">بمجرد اختيار بدء التمرين، ستظهر لك إرشادات مخصصة بالبلدي، كلما أكملت مجموعة (Set) اضغط على تأكيد ليبدأ عداد الراحة تلقائياً مع تنبيه صوتي رقمي فور نهايته للبدء بالمجموعة التالية، مع تفعيل عداد الثواني للحركات المعتمدة على الوقت [16].</p>
+                                <h4 class="font-bold text-strong-color text-xs md:text-sm">2. كيف يعمل المساعد التفاعلي؟</h4>
+                                <p class="mt-1.5 text-muted-color">بمجرد اختيار بدء التمرين، ستظهر لك إرشادات مخصصة بالبلدي، كلما أكملت مجموعة (Set) اضغط على تأكيد ليبدأ عداد الراحة تلقائياً مع تنبيه صوتي.</p>
                             </div>
                             <div>
-                                <h4 class="font-bold text-main-color text-xs md:text-sm">3. ماذا لو قمت بعمل تحديث (Refresh) بالخطأ؟</h4>
-                                <p class="mt-1.5 text-muted-color">لا تقلق أبداً، النظام الآن يحفظ تقدمك (الجولة والتمرين الحالي) تلقائياً، وبمجرد العودة والضغط على "ابدأ التمرين" سيستكمل من حيث توقفت.</p>
+                                <h4 class="font-bold text-strong-color text-xs md:text-sm">3. ماذا لو قمت بعمل تحديث (Refresh) بالخطأ؟</h4>
+                                <p class="mt-1.5 text-muted-color">لا تقلق أبداً، النظام الآن يحفظ تقدمك (الجولة والتمرين الحالي) تلقائياً، وبمجرد العودة سيستكمل من حيث توقفت.</p>
                             </div>
                         </div>
                     </div>
@@ -1010,13 +1058,13 @@
     </nav>
 
     <!-- TOAST NOTIFICATION CONTAINER -->
-    <div id="toast-notification" class="fixed top-5 left-1/2 -translate-x-1/2 bg-slate-900 border border-orange-500/40 text-slate-100 px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-350 translate-y-[-150%] opacity-0 z-50 pointer-events-none">
-        <div class="p-1 bg-orange-500/10 rounded-full text-orange-400" id="toast-icon-wrapper">
+    <div id="toast-notification" class="fixed top-5 left-1/2 -translate-x-1/2 panel-bg border theme-primary-border text-main-color px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-350 translate-y-[-150%] opacity-0 z-50 pointer-events-none">
+        <div class="p-1 theme-primary-glow-bg rounded-full theme-primary-text" id="toast-icon-wrapper">
             <i data-lucide="check" class="w-4.5 h-4.5"></i>
         </div>
         <div>
-            <p id="toast-title" class="font-black text-xs text-slate-200">عمل رائع!</p>
-            <p id="toast-msg" class="text-[10px] text-slate-400 mt-0.5 font-medium">تم حفظ بياناتك بنجاح.</p>
+            <p id="toast-title" class="font-black text-xs text-strong-color">عمل رائع!</p>
+            <p id="toast-msg" class="text-[10px] text-muted-color mt-0.5 font-medium">تم حفظ بياناتك بنجاح.</p>
         </div>
     </div>
 
@@ -1329,7 +1377,7 @@
             }
             
             if (profile.healthNotes) {
-                tips += `<br><br><span class="text-amber-500 font-bold">⚠️ ملاحظة صحية مفعلة:</span> لقد سجلت (${profile.healthNotes}). يرجى أداء الحركات المنزلية بهدوء والتوقف فوراً عند الشعور بأي ألم غير طبيعي في المفاصل.`;
+                tips += `<br><br><span class="text-rose-500 font-bold">⚠️ ملاحظة صحية مفعلة:</span> لقد سجلت (${profile.healthNotes}). يرجى أداء الحركات المنزلية بهدوء والتوقف فوراً عند الشعور بأي ألم غير طبيعي في المفاصل.`;
             }
             
             safeSetHTML('advisor-brief-text', tips);
@@ -1374,22 +1422,22 @@
             const macros = calculateMacros(estCalories, weight);
 
             safeSetHTML('ob-preview-metrics', `
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1.5 text-[11px] text-slate-300 font-semibold leading-relaxed text-right">
-                    <div class="sub-panel-bg p-3.5 rounded-xl border border-slate-800 text-right">
-                        <span class="text-slate-500 block text-[9px] font-bold">كتلة الجسم (BMI):</span>
-                        <strong class="text-orange-400 theme-primary-text font-black text-xs">${bmiFixed} (${bodyClass})</strong>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1.5 text-[11px] text-muted-color font-semibold leading-relaxed text-right">
+                    <div class="sub-panel-bg p-3.5 rounded-xl border border-main-color text-right">
+                        <span class="text-muted-color block text-[9px] font-bold">كتلة الجسم (BMI):</span>
+                        <strong class="theme-primary-text font-black text-xs">${bmiFixed} (${bodyClass})</strong>
                     </div>
-                    <div class="sub-panel-bg p-3.5 rounded-xl border border-slate-800 text-right">
-                        <span class="text-slate-500 block text-[9px] font-bold">الهدف الرياضي المحتسب:</span>
-                        <strong class="text-emerald-400 font-bold text-xs">${goal}</strong>
+                    <div class="sub-panel-bg p-3.5 rounded-xl border border-main-color text-right">
+                        <span class="text-muted-color block text-[9px] font-bold">الهدف الرياضي المحتسب:</span>
+                        <strong class="text-emerald-500 font-bold text-xs">${goal}</strong>
                     </div>
-                    <div class="sub-panel-bg p-3.5 rounded-xl border border-slate-800 text-right sm:col-span-2">
-                        <span class="text-slate-500 block text-[9px] font-bold">السعرات والمغذيات اليومية المستهدفة لنظام الطيبات المطور:</span>
-                        <strong class="text-amber-400 font-bold block mb-1.5 text-xs md:text-sm">${estCalories} سعرة نشطة للاستقرار</strong>
-                        <div class="flex flex-wrap gap-2 text-[10px] mt-1 text-slate-400 font-bold">
-                            <span>🌾 كربوهيدرات: <strong class="text-slate-200">${macros.carbs.grams} جم</strong></span> | 
-                            <span>🧈 دهون طبيعية: <strong class="text-slate-200">${macros.fat.grams} جم</strong></span> | 
-                            <span>🥩 بروتين: <strong class="text-slate-200">${macros.protein.grams} جم</strong></span>
+                    <div class="sub-panel-bg p-3.5 rounded-xl border border-main-color text-right sm:col-span-2">
+                        <span class="text-muted-color block text-[9px] font-bold">السعرات والمغذيات اليومية المستهدفة لنظام الطيبات المطور:</span>
+                        <strong class="text-amber-500 font-bold block mb-1.5 text-xs md:text-sm">${estCalories} سعرة نشطة للاستقرار</strong>
+                        <div class="flex flex-wrap gap-2 text-[10px] mt-1 text-muted-color font-bold">
+                            <span>🌾 كربوهيدرات: <strong class="text-strong-color">${macros.carbs.grams} جم</strong></span> | 
+                            <span>🧈 دهون طبيعية: <strong class="text-strong-color">${macros.fat.grams} جم</strong></span> | 
+                            <span>🥩 بروتين: <strong class="text-strong-color">${macros.protein.grams} جم</strong></span>
                         </div>
                     </div>
                 </div>
@@ -1403,13 +1451,11 @@
                 document.body.classList.add('light');
                 profile.theme = "light";
                 safeSetHTML('theme-icon', '<i data-lucide="moon" class="w-4.5 h-4.5"></i>');
-                document.getElementById('theme-toggle-btn').className = "panel-bg hover:panel-bg-hover active:scale-95 text-slate-700 p-2.5 rounded-xl border border-main-color flex items-center justify-center transition-all duration-300 shadow-sm";
             } else {
                 document.body.classList.remove('light');
                 document.body.classList.add('dark');
                 profile.theme = "dark";
                 safeSetHTML('theme-icon', '<i data-lucide="sun" class="w-4.5 h-4.5"></i>');
-                document.getElementById('theme-toggle-btn').className = "panel-bg hover:panel-bg-hover active:scale-95 text-amber-500 p-2.5 rounded-xl border border-main-color flex items-center justify-center transition-all duration-300 shadow-sm";
             }
             saveData(); lucide.createIcons(); initChart();
         }
@@ -1464,7 +1510,6 @@
                         document.body.className = profile.theme + " min-h-screen flex flex-col pb-28 md:pb-0";
                         if (profile.theme === "light") {
                             safeSetHTML('theme-icon', '<i data-lucide="moon" class="w-4.5 h-4.5"></i>');
-                            document.getElementById('theme-toggle-btn').className = "panel-bg hover:panel-bg-hover active:scale-95 text-slate-700 p-2.5 rounded-xl border border-main-color flex items-center justify-center transition-all duration-300 shadow-sm";
                         }
                     }
                     if (profile.appFont) document.documentElement.style.setProperty('--font-family', `'${profile.appFont}', sans-serif`);
@@ -1573,9 +1618,9 @@
                 const ind = document.getElementById(`step-ind-${i}`);
                 if (ind) {
                     if (i <= currentOnboardingStep) {
-                        ind.className = "h-2 flex-1 rounded-full bg-orange-500 transition-all duration-500 theme-primary-bg shadow-[0_0_10px_rgba(249,115,22,0.5)]";
+                        ind.className = "h-2 flex-1 rounded-full theme-primary-bg transition-all duration-500 shadow-md";
                     } else {
-                        ind.className = "h-2 flex-1 rounded-full bg-slate-800 transition-all duration-500";
+                        ind.className = "h-2 flex-1 rounded-full sub-panel-bg transition-all duration-500 border border-main-color";
                     }
                 }
             }
@@ -1708,31 +1753,29 @@
                 let badgeHTML = "";
 
                 if (isToday) {
-                    // Visuals for TODAY (Highlighted prominently)
-                    cardClasses = "panel-bg border-2 border-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.15)] transform scale-[1.02] z-10 relative hover-lift";
-                    badgeHTML = `<span class="text-[10px] bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 px-3 py-1.5 rounded-full font-black animate-pulse shadow-lg flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> تمرين اليوم</span>`;
+                    cardClasses = "panel-bg border-2 theme-primary-border shadow-[0_0_20px_var(--primary-glow)] transform scale-[1.02] z-10 relative hover-lift";
+                    badgeHTML = `<span class="text-[10px] theme-primary-bg text-white px-3 py-1.5 rounded-full font-black animate-pulse shadow-lg flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> تمرين اليوم</span>`;
                     
                     if (isCompletedToday) {
-                        buttonHTML = `<button disabled class="w-full py-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-black rounded-2xl cursor-not-allowed flex justify-center items-center gap-1.5">
+                        buttonHTML = `<button disabled class="w-full py-3 tayyebat-allow-card text-emerald-500 border border-emerald-500/30 text-xs font-black rounded-2xl cursor-not-allowed flex justify-center items-center gap-1.5">
                             تم إنجاز تمرين اليوم بطل 🏆
                         </button>`;
                     } else {
                         if (dayData.isRest) {
-                            buttonHTML = `<button onclick="unlockAudioContext(); logRestDayCompletion('${dayKey}')" class="w-full py-3 bg-blue-500 hover:bg-blue-600 text-slate-950 text-xs font-black rounded-2xl transition-all shadow-md flex justify-center items-center gap-1.5">
+                            buttonHTML = `<button onclick="unlockAudioContext(); logRestDayCompletion('${dayKey}')" class="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white text-xs font-black rounded-2xl transition-all shadow-md flex justify-center items-center gap-1.5">
                                 تأكيد راحة اليوم 💤
                             </button>`;
                         } else {
-                            buttonHTML = `<button onclick="unlockAudioContext(); launchInteractiveWorkout('${dayKey}')" class="w-full py-3 premium-gradient-btn text-slate-950 text-xs font-black rounded-2xl transition-all shadow-md flex justify-center items-center gap-1.5">
+                            buttonHTML = `<button onclick="unlockAudioContext(); launchInteractiveWorkout('${dayKey}')" class="w-full py-3 premium-gradient-btn text-xs font-black rounded-2xl transition-all shadow-md flex justify-center items-center gap-1.5">
                                 ابدأ تمارين اليوم 🚀
                             </button>`;
                         }
                     }
                 } else {
-                    // Visuals for OTHER DAYS (Locked & Faded)
                     cardClasses = "panel-bg border border-main-color opacity-60 grayscale-[30%] pointer-events-none";
-                    badgeHTML = `<span class="text-[9px] bg-slate-800 text-slate-400 px-2.5 py-1 rounded-full border border-slate-700 font-bold flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> مغلق</span>`;
+                    badgeHTML = `<span class="text-[9px] sub-panel-bg text-muted-color px-2.5 py-1 rounded-full border border-main-color font-bold flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> مغلق</span>`;
                     
-                    buttonHTML = `<button disabled class="w-full py-3 bg-slate-800/50 text-slate-500 text-xs font-bold rounded-2xl cursor-not-allowed flex justify-center items-center gap-1.5 border border-slate-700">
+                    buttonHTML = `<button disabled class="w-full py-3 sub-panel-bg text-muted-color text-xs font-bold rounded-2xl cursor-not-allowed flex justify-center items-center gap-1.5 border border-main-color">
                         متاح في يومه المخصص 🔒
                     </button>`;
                 }
@@ -1746,15 +1789,15 @@
                         <p class="text-xs text-muted-color leading-relaxed font-semibold">${dayData.title}</p>
                         
                         ${dayData.isRest ? 
-                        `<div class="flex items-center gap-1.5 text-xs text-orange-400/80 font-bold">
-                            <i data-lucide="coffee" class="w-4 h-4 text-orange-400"></i>
+                        `<div class="flex items-center gap-1.5 text-xs text-orange-500 font-bold">
+                            <i data-lucide="coffee" class="w-4 h-4"></i>
                             <span>يوم راحة سلبي وتغذية الطيبات</span>
                         </div>` 
                         : 
-                        `<div class="flex justify-between items-center text-[10px] text-slate-400 font-black">
-                            <span class="flex items-center gap-1"><i data-lucide="dumbbell" class="w-3.5 h-3.5 text-orange-450"></i> ${dayData.exercises.length} حركات</span>
-                            <span class="flex items-center gap-1"><i data-lucide="zap" class="w-3.5 h-3.5 text-rose-400"></i> ${dayData.calories} سعرة</span>
-                            <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-blue-400"></i> ${dayData.duration} دقيقة</span>
+                        `<div class="flex justify-between items-center text-[10px] text-muted-color font-black">
+                            <span class="flex items-center gap-1"><i data-lucide="dumbbell" class="w-3.5 h-3.5 theme-primary-text"></i> ${dayData.exercises.length} حركات</span>
+                            <span class="flex items-center gap-1"><i data-lucide="zap" class="w-3.5 h-3.5 text-rose-500"></i> ${dayData.calories} سعرة</span>
+                            <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-blue-500"></i> ${dayData.duration} دقيقة</span>
                         </div>`
                         }
                         
@@ -1817,7 +1860,7 @@
                 previewList.innerHTML = '';
                 if (todayData.isRest) {
                     previewList.innerHTML = `
-                        <div class="sub-panel-bg border border-orange-500/10 p-4 rounded-2xl col-span-2 text-right text-xs leading-relaxed text-slate-300 shadow-inner">
+                        <div class="sub-panel-bg border border-main-color p-4 rounded-2xl col-span-2 text-right text-xs leading-relaxed text-muted-color shadow-inner">
                             <strong>💤 استراحة استشفائية مبرمجة اليوم:</strong> عضلاتك بحاجة للراحة التامة والهدوء اليوم لإعادة تغذية وبناء الخلايا المعقدة، والالتزام ببرنامج الطيبات المطور لمنع الهدم والالتهاب [16].
                         </div>
                     `;
@@ -1825,11 +1868,11 @@
                     todayData.exercises.forEach((ex, idx) => {
                         const itemHTML = `
                             <div class="sub-panel-bg border border-main-color p-4 rounded-2xl flex flex-col gap-2 text-right shadow-sm hover-lift">
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-main-color/30 pb-2">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-main-color pb-2">
                                     <span class="text-xs sm:text-sm font-black text-main-color leading-tight">${idx+1}. ${ex.name}</span>
-                                    <span class="text-[10px] text-orange-400 theme-primary-text font-black px-2 py-0.5 bg-orange-500/10 rounded border border-orange-500/20 w-fit shrink-0">${ex.sets} × ${ex.reps}</span>
+                                    <span class="text-[10px] theme-primary-text font-black px-2 py-0.5 theme-primary-glow-bg rounded border theme-primary-border w-fit shrink-0">${ex.sets} × ${ex.reps}</span>
                                 </div>
-                                <p class="text-[10px] sm:text-xs text-slate-400 leading-relaxed font-semibold">${ex.explanation}</p>
+                                <p class="text-[10px] sm:text-xs text-muted-color leading-relaxed font-semibold">${ex.explanation}</p>
                             </div>
                         `;
                         previewList.insertAdjacentHTML('beforeend', itemHTML);
@@ -1844,15 +1887,15 @@
 
                 if (todayData.isRest) {
                     if (isCompletedToday) {
-                        btnContainer.innerHTML = `<button disabled class="bg-emerald-500/10 text-emerald-400 font-black px-8 py-3.5 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 cursor-not-allowed border border-emerald-500/20 w-full md:w-auto">تم إنجاز راحة اليوم بنجاح ✔️</button>`;
+                        btnContainer.innerHTML = `<button disabled class="tayyebat-allow-card text-emerald-500 font-black px-8 py-3.5 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 cursor-not-allowed border w-full md:w-auto">تم إنجاز راحة اليوم بنجاح ✔️</button>`;
                     } else {
-                        btnContainer.innerHTML = `<button onclick="unlockAudioContext(); logRestDayCompletion('${todayKey.toString()}');" class="premium-gradient-btn active:scale-95 text-slate-950 font-black px-8 py-3.5 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 shadow-lg transition-all w-full md:w-auto">تسجيل إكمال الراحة اليوم 💤</button>`;
+                        btnContainer.innerHTML = `<button onclick="unlockAudioContext(); logRestDayCompletion('${todayKey.toString()}');" class="premium-gradient-btn active:scale-95 font-black px-8 py-3.5 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 shadow-lg transition-all w-full md:w-auto">تسجيل إكمال الراحة اليوم 💤</button>`;
                     }
                 } else {
                     if (isCompletedToday) {
-                        btnContainer.innerHTML = `<button disabled class="bg-emerald-500/10 text-emerald-400 font-black px-8 py-3.5 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 cursor-not-allowed border border-emerald-500/20 w-full md:w-auto">تم إنجاز تمرين اليوم بطل 🏆</button>`;
+                        btnContainer.innerHTML = `<button disabled class="tayyebat-allow-card text-emerald-500 font-black px-8 py-3.5 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 cursor-not-allowed border w-full md:w-auto">تم إنجاز تمرين اليوم بطل 🏆</button>`;
                     } else {
-                        btnContainer.innerHTML = `<button onclick="unlockAudioContext(); launchInteractiveWorkout('${todayKey.toString()}');" class="premium-gradient-btn active:scale-95 text-slate-950 font-black px-8 py-3.5 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 shadow-lg shadow-orange-500/10 transition-all w-full md:w-auto">ابدأ تمرين اليوم التفاعلي الآن 🚀</button>`;
+                        btnContainer.innerHTML = `<button onclick="unlockAudioContext(); launchInteractiveWorkout('${todayKey.toString()}');" class="premium-gradient-btn active:scale-95 font-black px-8 py-3.5 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 shadow-lg transition-all w-full md:w-auto">ابدأ تمرين اليوم التفاعلي الآن 🚀</button>`;
                     }
                 }
             }
@@ -1899,15 +1942,15 @@
 
             if (hasForbidden) {
                 feedback = `
-                    <div class="text-rose-400 font-bold mb-1 text-[10px]">⚠️ تم رصد مواد تخالف نظام الطيبات:</div>
-                    <ul class="list-disc list-inside flex flex-col gap-1 text-[9px] text-slate-300">
+                    <div class="text-rose-500 font-bold mb-1 text-[10px]">⚠️ تم رصد مواد تخالف نظام الطيبات:</div>
+                    <ul class="list-disc list-inside flex flex-col gap-1 text-[9px] text-muted-color">
                         ${matchedReasons.map(r => `<li>${r}</li>`).join('')}
                     </ul>
                 `;
             } else {
                 feedback = `
-                    <span class="text-emerald-400 font-bold text-[10px]">✔️ وجبة طيبات ممتازة ومتوافقة!</span>
-                    <p class="text-slate-400 text-[9px] mt-1">تلتزم الوجبة بمسموحات الطيبات المريحة للجهاز الهضمي وتوفر استشفاء مثالي.</p>
+                    <span class="text-emerald-500 font-bold text-[10px]">✔️ وجبة طيبات ممتازة ومتوافقة!</span>
+                    <p class="text-muted-color text-[9px] mt-1">تلتزم الوجبة بمسموحات الطيبات المريحة للجهاز الهضمي وتوفر استشفاء مثالي.</p>
                 `;
             }
 
@@ -1933,19 +1976,19 @@
 
             list.innerHTML = '';
             if (dietLogs.length === 0) {
-                list.innerHTML = '<p class="text-[10px] text-slate-500 text-center py-2 font-semibold">لم تسجل أي وجبات اليوم بعد.</p>';
+                list.innerHTML = '<p class="text-[10px] text-muted-color text-center py-2 font-semibold">لم تسجل أي وجبات اليوم بعد.</p>';
                 return;
             }
 
             dietLogs.forEach(log => {
                 const card = document.createElement('div');
-                card.className = `p-3 rounded-2xl border text-[10px] flex flex-col gap-1.5 ${log.hasForbidden ? 'bg-rose-500/5 border-rose-500/20' : 'sub-panel-bg border-main-color'}`;
+                card.className = `p-3 rounded-2xl border text-[10px] flex flex-col gap-1.5 ${log.hasForbidden ? 'tayyebat-deny-card' : 'sub-panel-bg border-main-color'}`;
                 card.innerHTML = `
                     <div class="flex justify-between items-center border-b border-main-color pb-1">
                         <span class="font-bold text-main-color">${log.type} (${log.date})</span>
                         <div class="flex items-center gap-2">
-                            <span class="text-[9px] font-bold text-orange-400 theme-primary-text bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20">~${log.estCalories || 150} سعرة</span>
-                            <button onclick="deleteDietLog('${log.id}')" class="text-rose-400 hover:text-rose-350">
+                            <span class="text-[9px] font-bold theme-primary-text theme-primary-glow-bg px-2 py-0.5 rounded border theme-primary-border">~${log.estCalories || 150} سعرة</span>
+                            <button onclick="deleteDietLog('${log.id}')" class="text-rose-500 hover:text-rose-600">
                                 <i data-lucide="trash" class="w-4 h-4"></i>
                             </button>
                         </div>
@@ -2115,14 +2158,14 @@
                 safeToggleClass('state-rest-timer', 'hidden', false);
                 safeToggleClass('state-execution-timer', 'hidden', false);
 
-                safeSetHTML('current-rep-target-desc', `الهدف الحالي: العب <strong class="text-orange-500 font-bold theme-primary-text">${currentEx.reps}</strong> ثم اضغط لإكمال الجولة.`);
+                safeSetHTML('current-rep-target-desc', `الهدف الحالي: العب <strong class="theme-primary-text font-bold">${currentEx.reps}</strong> ثم اضغط لإكمال الجولة.`);
             }
 
             const pct = Math.round((activeExecIdx / exercises.length) * 100);
             document.getElementById('workout-progress-bar').style.width = `${pct}%`;
             safeSetText('workout-progress-pct', `${pct}%`);
             
-            saveWorkoutState(); // Save state visually
+            saveWorkoutState(); 
         }
 
         function startExecutionTimer() {
@@ -2325,10 +2368,10 @@
                         <td class="p-4 text-muted-color font-medium">${new Date(w.date).toLocaleDateString('ar-EG')}</td>
                         <td class="p-4 text-main-color font-bold">${w.name}</td>
                         <td class="p-4 text-muted-color">الكل مكمل (جولات تفاعلية)</td>
-                        <td class="p-4 text-emerald-400 font-bold">${w.duration} د</td>
-                        <td class="p-4 text-orange-400 font-bold">${w.calories}</td>
+                        <td class="p-4 text-emerald-500 font-bold">${w.duration} د</td>
+                        <td class="p-4 theme-primary-text font-bold">${w.calories}</td>
                         <td class="p-4 text-center">
-                            <button onclick="deleteWorkout('${w.id}')" class="text-rose-500 hover:text-rose-450 transition-all p-1.5 rounded-lg hover:bg-rose-500/10" title="حذف">
+                            <button onclick="deleteWorkout('${w.id}')" class="text-rose-500 hover:text-rose-600 transition-all p-1.5 rounded-lg hover:bg-rose-500/10" title="حذف">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </td>
@@ -2344,7 +2387,7 @@
                                 <span class="text-[9px] text-muted-color font-bold">${new Date(w.date).toLocaleDateString('ar-EG')}</span>
                                 <h4 class="font-black text-xs md:text-sm text-main-color mt-0.5 leading-tight">${w.name}</h4>
                             </div>
-                            <button onclick="deleteWorkout('${w.id}')" class="text-rose-500 hover:text-rose-450 p-1.5 rounded-lg hover:bg-rose-500/10">
+                            <button onclick="deleteWorkout('${w.id}')" class="text-rose-500 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-500/10">
                                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                             </button>
                         </div>
@@ -2353,10 +2396,10 @@
                                 <span class="text-muted-color block text-[9px] font-bold">الجولات</span><span class="font-black text-main-color mt-0.5">مكتمل ✔️</span>
                             </div>
                             <div class="sub-panel-bg p-2 rounded-xl border border-main-color">
-                                <span class="text-muted-color block text-[9px] font-bold">المدة</span><span class="font-black text-emerald-450 mt-0.5">${w.duration} د</span>
+                                <span class="text-muted-color block text-[9px] font-bold">المدة</span><span class="font-black text-emerald-500 mt-0.5">${w.duration} د</span>
                             </div>
                             <div class="sub-panel-bg p-2 rounded-xl border border-main-color">
-                                <span class="text-muted-color block text-[9px] font-bold">السعرات</span><span class="font-black text-orange-400 mt-0.5">${w.calories}</span>
+                                <span class="text-muted-color block text-[9px] font-bold">السعرات</span><span class="font-black theme-primary-text mt-0.5">${w.calories}</span>
                             </div>
                         </div>
                     `;
@@ -2390,9 +2433,9 @@
             const desktopBtn = document.getElementById(`tab-${tabId}-btn`);
             if (desktopBtn) desktopBtn.classList.add('active-tab');
 
-            document.querySelectorAll('.mobile-tab-btn').forEach(btn => { btn.classList.remove('active-tab'); btn.classList.add('text-slate-400'); });
+            document.querySelectorAll('.mobile-tab-btn').forEach(btn => { btn.classList.remove('active-tab'); btn.classList.add('text-muted-color'); });
             const mobileBtn = document.getElementById(`mob-${tabId}-btn`);
-            if (mobileBtn) { mobileBtn.classList.add('active-tab'); mobileBtn.classList.remove('text-slate-400'); }
+            if (mobileBtn) { mobileBtn.classList.add('active-tab'); mobileBtn.classList.remove('text-muted-color'); }
 
             if (tabId === 'active-workout') {
                 if (activeWorkoutSession) updateCompanionView('active');
@@ -2408,11 +2451,20 @@
             const toast = document.getElementById('toast-notification');
             const toastTitle = document.getElementById('toast-title');
             const toastMsg = document.getElementById('toast-msg');
+            const toastIconWrapper = document.getElementById('toast-icon-wrapper');
 
             toastTitle.innerText = title; toastMsg.innerText = msg;
 
-            if (isSuccess) { toast.classList.remove('border-rose-500/40'); toast.classList.add('border-orange-500/40'); } 
-            else { toast.classList.remove('border-orange-500/40'); toast.classList.add('border-rose-500/40'); }
+            if (isSuccess) { 
+                toast.classList.remove('border-rose-500/40'); 
+                toast.classList.add('theme-primary-border'); 
+                toastIconWrapper.className = "p-1 theme-primary-glow-bg rounded-full theme-primary-text";
+            } 
+            else { 
+                toast.classList.remove('theme-primary-border'); 
+                toast.classList.add('border-rose-500/40'); 
+                toastIconWrapper.className = "p-1 bg-rose-500/10 rounded-full text-rose-500";
+            }
 
             toast.classList.remove('translate-y-[-150%]', 'opacity-0'); toast.classList.add('translate-y-0', 'opacity-100');
             setTimeout(() => { toast.classList.add('translate-y-[-150%]', 'opacity-0'); toast.classList.remove('translate-y-0', 'opacity-100'); }, 3000);
@@ -2421,8 +2473,8 @@
         function initChart() {
             const ctx = document.getElementById('workout-chart').getContext('2d');
             const isDarkMode = document.body.classList.contains('dark');
-            const textColor = isDarkMode ? '#94a3b8' : '#475569';
-            const gridColor = isDarkMode ? '#1e293b' : '#e2e8f0';
+            const textColor = isDarkMode ? '#94a3b8' : '#64748b';
+            const gridColor = isDarkMode ? '#1e293b' : '#e5e7eb';
 
             if (chartInstance) chartInstance.destroy();
 
